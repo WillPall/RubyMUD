@@ -17,7 +17,9 @@ ActiveRecord::Base.establish_connection(
 # Set up database tables and columns
 ActiveRecord::Schema.define do
   create_table :muby_users, force: true do |t|
+    t.string :username
     t.string :name
+    t.string :password
   end
 end
 
@@ -35,7 +37,7 @@ EventMachine.run do
 
   # TODO: Figure out how to get this working on external servers (is it just my
   # home router?)
-  EventMachine.start_server('0.0.0.0', 2019, Muby::Server)
+  EventMachine.start_server('0.0.0.0', 2019, Muby::Connection)
   EventMachine.add_periodic_timer(Muby::Game::TICK_INTERVAL) do
     game.tick
   end
