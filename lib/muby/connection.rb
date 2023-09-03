@@ -82,14 +82,11 @@ class Muby::Connection < EM::Connection
 
   ####
   # Login handling
-  #
-  # NOTE: we _must_ add a carriage return anywhere echo would be off or the
-  # client doesn't know what to do with cursor placement
   ####
 
   def do_username_handling
     if @current_response.blank?
-      send_line("Blank usernames are not allowed. Try again:\r")
+      send_line("Blank usernames are not allowed. Try again:")
       return
     end
 
@@ -97,12 +94,12 @@ class Muby::Connection < EM::Connection
     @logging_in_user = Muby::User.find_by_username(@current_response)
 
     if @logging_in_user.present?
-      send_line("Welcome back, #{@logging_in_user.username}! Enter your password:\r")
+      send_line("Welcome back, #{@logging_in_user.username}! Enter your password:")
       @current_username_state = USERNAME_STATES::EXISTING
     end
 
     if @logging_in_user.blank?
-      send_line("We haven't seen you before, #{@current_response}. Choose a password:\r")
+      send_line("We haven't seen you before, #{@current_response}. Choose a password:")
       @current_username_state = USERNAME_STATES::NEW
       @logging_in_user = Muby::User.new(
         username: @current_response,
@@ -116,7 +113,7 @@ class Muby::Connection < EM::Connection
 
   def do_password_handling
     if @current_response.blank?
-      send_line("Please enter a valid password:\r")
+      send_line("Please enter a valid password:")
       @current_password_state = PASSWORD_STATES::BLANK
       return
     end
@@ -128,7 +125,7 @@ class Muby::Connection < EM::Connection
 
     if @current_username_state == USERNAME_STATES::EXISTING
       if @logging_in_user.password != @current_response
-        send_line("That password is incorrect. Try again:\r")
+        send_line("That password is incorrect. Try again:")
         @current_password_state = PASSWORD_STATES::INVALID
         return
       end
@@ -198,7 +195,9 @@ class Muby::Connection < EM::Connection
   end
 
   def send_line(line)
-    self.send_data("#{line}\n")
+    # we must add a carriage return anywhere echo would be off or the client
+    # doesn't know what to do with cursor placement
+    self.send_data("#{line}#{(@current_echo_status == ECHO_STATUS::OFF ? "\r" : "")}\n")
   end
 
   def send_to_clients(message, clients = nil)
