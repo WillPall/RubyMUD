@@ -33,8 +33,6 @@ class Muby::Connection < EM::Connection
   #
 
   def post_init
-    @username = nil
-
     @current_password_state = PASSWORD_STATES::INVALID
     @current_login_state = LOGIN_STATES::USERNAME
     @current_username_state = USERNAME_STATES::BLANK
@@ -47,8 +45,10 @@ class Muby::Connection < EM::Connection
   def unbind
     @@connected_clients.delete(self)
 
-    send_to_clients(Muby::MessageHelper.info_message("#{@username} has left the game."), Muby::ConnectionHelper.other_peers(self))
-    puts "[info] #{@username} has left" if entered_username?
+    if logged_in?
+      send_to_clients(Muby::MessageHelper.info_message("#{self.user.name} has left the game."), Muby::ConnectionHelper.other_peers(self))
+      puts "[info] #{self.user.name} has left"
+    end
   end
 
   ##
@@ -94,17 +94,17 @@ class Muby::Connection < EM::Connection
     end
 
     # next try to find a user
-    @current_user = Muby::User.find_by_username(@current_response)
+    @logging_in_user = Muby::User.find_by_username(@current_response)
 
-    if @current_user.present?
-      send_line("Welcome back, #{@current_user.username}! Enter your password:\r")
+    if @logging_in_user.present?
+      send_line("Welcome back, #{@logging_in_user.username}! Enter your password:\r")
       @current_username_state = USERNAME_STATES::EXISTING
     end
 
-    if @current_user.blank?
+    if @logging_in_user.blank?
       send_line("We haven't seen you before, #{@current_response}. Choose a password:\r")
       @current_username_state = USERNAME_STATES::NEW
-      @current_user = Muby::User.new(
+      @logging_in_user = Muby::User.new(
         username: @current_response,
         name: @current_response
       )
@@ -122,12 +122,12 @@ class Muby::Connection < EM::Connection
     end
 
     if @current_username_state == USERNAME_STATES::NEW
-      @current_user.password = @current_response
-      @current_user.save
+      @logging_in_user.password = @current_response
+      @logging_in_user.save
     end
 
     if @current_username_state == USERNAME_STATES::EXISTING
-      if @current_user.password != @current_response
+      if @logging_in_user.password != @current_response
         send_line("That password is incorrect. Try again:\r")
         @current_password_state = PASSWORD_STATES::INVALID
         return
@@ -144,7 +144,7 @@ class Muby::Connection < EM::Connection
 
   def do_login_finalization
     @@connected_clients.push(self)
-    self.user = @current_user
+    self.user = @logging_in_user
     self.user.connection = self
 
     # ensure they're in a valid room
@@ -158,17 +158,13 @@ class Muby::Connection < EM::Connection
     send_line(self.user.room.render)
     send_line(self.user.prompt)
 
-    send_to_clients(Muby::MessageHelper.info_message("#{@username} has joined the game"), Muby::ConnectionHelper.other_peers(self))
-    puts Paint[@username, :green] + ' has joined'
+    send_to_clients(Muby::MessageHelper.info_message("#{self.user.name} has joined the game"), Muby::ConnectionHelper.other_peers(self))
+    puts Paint[self.user.name, :green] + ' has joined'
   end
 
   #
   # Username handling
   #
-
-  def entered_username?
-    @username.present?
-  end
 
   def logged_in?
     self.user.present?

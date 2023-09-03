@@ -26,6 +26,10 @@ class Muby::Game
 
 
     @last_tick = Time.now.to_f
+
+    # TODO: BIG TODO: All the `.save` on all these model records (e.g. user,
+    # room, etc) need to be moved to a periodic save_all kind of thing, as well
+    # as saving on player leave
   end
 
   private
