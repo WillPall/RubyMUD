@@ -11,12 +11,23 @@ class Muby::User < ActiveRecord::Base
   end
 
   def move_to(destination)
+    # tell everyone we're leaving
+    self.connection.send_to_users("#{Paint[self.name, :green]} went #{Paint[destination, :green]}", room_users)
+
+    # actually move the user
     destination_room = room.connections.where(name: destination).first.destination
     self.room = destination_room
     self.save
 
     self.connection.send_line(destination_room.render)
     self.connection.send_line(self.prompt)
+
+    # tell everyone we've arrived
+    self.connection.send_to_users("#{Paint[self.name, :green]} entered the area", room_users)
+  end
+
+  def room_users
+    self.room.users.reject { |u| u == self }
   end
 
   def prompt

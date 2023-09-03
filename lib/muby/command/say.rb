@@ -5,7 +5,8 @@ class Muby::Command::Say < Muby::Command
   end
 
   def execute(client, arguments)
-    client.handle_chat_message(arguments)
+    client.send_to_users(Muby::MessageHelper.user_message(client.user, arguments), client.user.room_users)
+    client.send_line(Muby::MessageHelper.feedback_message(arguments))
   end
 end
 

@@ -19,7 +19,7 @@ class Muby::Connection < EM::Connection
   def unbind
     @@connected_clients.delete(self)
 
-    send_to_clients(info_message("#{@username} has left the game."), other_peers)
+    send_to_clients(Muby::MessageHelper.info_message("#{@username} has left the game."), other_peers)
     puts "[info] #{@username} has left" if entered_username?
   end
 
@@ -117,25 +117,13 @@ class Muby::Connection < EM::Connection
     send_line(self.user.room.render)
     send_line(self.user.prompt)
 
-    send_to_clients(info_message("#{@username} has joined the game"), other_peers)
+    send_to_clients(Muby::MessageHelper.info_message("#{@username} has joined the game"), other_peers)
     puts Paint[@username, :green] + ' has joined'
   end
 
   #
   # Helpers
   #
-
-  def info_message(message)
-    "#{Paint['[info]', :cyan]} #{message}"
-  end
-
-  def user_message(user, message, user_color = :green)
-    "#{Paint["#{user.name} says:", user_color]} #{message}"
-  end
-
-  def feedback_message(message)
-    "#{Paint['you say:', :yellow]} #{message}"
-  end
 
   def number_of_connected_clients
     @@connected_clients.count
@@ -157,7 +145,29 @@ class Muby::Connection < EM::Connection
     end
   end
 
+  def send_to_users(message, users)
+    users.each do |user|
+      # TODO: this is extremely gross, but because we're using ActiveRecord
+      # relations, when you load certain things, they don't contain their
+      # instance variables anymore. For now, we'll just find the client that
+      # matches each user
+      find_client_by_user(user).send_line(message)
+    end
+  end
+
   def self.connected_clients
     @@connected_clients
+  end
+
+  private
+
+  def find_client_by_user(user)
+    @@connected_clients.each do |client|
+      if client.user.id == user.id
+        return client
+      end
+    end
+
+    nil
   end
 end
