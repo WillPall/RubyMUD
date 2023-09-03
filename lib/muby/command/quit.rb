@@ -1,8 +1,8 @@
-class Muby::Command::Exit < Muby::Command
+class Muby::Command::Quit < Muby::Command
   def initialize
     super
 
-    self.name = :exit
+    self.name = :quit
     self.description = 'Save and leave the server'
     self.requires_full_name = true
   end
@@ -15,4 +15,4 @@ class Muby::Command::Exit < Muby::Command
   end
 end
 
-Muby::CommandHandler.register_command(Muby::Command::Exit.new)
+Muby::CommandHandler.register_command(Muby::Command::Quit.new)
