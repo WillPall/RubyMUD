@@ -1,3 +1,16 @@
+# Mac dot-files
+\._*
+\.DS_Store
+\.DS_Store\?
+\.Spotlight\-V100
+\.Trashes
+Thumbs\.db
+ehthumbs\.db
+Icon\?
+
+# Temp files
 tmp/*
+
+# Ignore the actual DB data
 db/data/*
 !db/data/.keep
