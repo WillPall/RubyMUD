@@ -4,6 +4,20 @@ class Muby::Game
 
   def initialize
     @last_tick = Time.now.to_f * 1000
+
+    Muby::Room.destroy_all
+
+    roomw = Muby::Room.create
+    rooma = Muby::Room.create
+    rooms = Muby::Room.create
+    roomd = Muby::Room.create
+    roomx = Muby::Room.create
+
+    Muby::Room::Connection.create(
+      room: roomw,
+      destination: rooms,
+      name: 'south'
+    )
   end
 
   # TODO: EventMachine doesn't give any guarantees around timing. It will be
@@ -17,10 +31,11 @@ class Muby::Game
     # background without blocking EventMachine's timer
     # Thread.new do
     #   puts "Connected users: "
-    #   Muby::Server.get_clients.each do |client|
+    #   Muby::Connection.get_clients.each do |client|
     #     puts "\t#{client.user.name}"
     #   end
     # end
+
 
     @last_tick = Time.now.to_f
   end

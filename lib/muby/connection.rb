@@ -27,7 +27,10 @@ class Muby::Connection < EM::Connection
     data = data.strip
 
     if logged_in?
-      handle_chat_message(data)
+      command, arguments = data.split(' ', 2)
+      Muby::CommandHandler.dispatch_command(self, command.downcase.to_sym, arguments)
+      binding.pry
+      # handle_chat_message(data)
     elsif !entered_username?
       verify_username(data)
     else
@@ -79,13 +82,16 @@ class Muby::Connection < EM::Connection
       self.user = Muby::User.create(
         username: @username,
         name: @username,
-        password: input
+        password: input,
+        room: Muby::Room.first
       )
     elsif existing_user.password != input
       send_line('That password is incorrect. Try again:')
       return
     else
       self.user = existing_user
+      self.user.room = Muby::Room.first
+      self.user.save
     end
 
     @@connected_clients.push(self)

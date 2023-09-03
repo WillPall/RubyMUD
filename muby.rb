@@ -14,19 +14,22 @@ ActiveRecord::Base.establish_connection(
 )
 
 # Set up database tables and columns
-if !ActiveRecord::Base.connection.table_exists? :muby_users
-  ActiveRecord::Schema.define do
-    create_table :muby_users, force: true do |t|
-      t.string :username
-      t.string :name
-      t.string :password
-    end
-  end
-end
+# ActiveRecord::Schema.define do
+#   create_table :muby_users do |t|
+#     t.string :username
+#     t.string :name
+#     t.string :password
+#     t.integer :room_id
+#   end
+
+#   create_table :muby_rooms, force: true do |t|
+#   end
+# end
 
 # TODO: we have to load the main classes/modules first before loading the rest
 # there's got to be a better way to do this
 Dir[File.join(__dir__, 'lib', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'lib', 'muby/*.rb')].each { |file| require file }
 Dir[File.join(__dir__, 'lib', '**/*.rb')].each { |file| require file }
 
 EventMachine.run do
