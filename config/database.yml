@@ -1,2 +1,6 @@
-adapter: "sqlite3"
-database: "db/data/muby.db"
+adapter: postgresql
+encoding: unicode
+database: muby
+pool: 5
+username: muby
+password:

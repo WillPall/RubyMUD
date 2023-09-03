@@ -8,10 +8,8 @@ require 'active_record'
 Bundler.require(:default)
 
 # TODO: Automate pulling in schema, migrations, etc
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: 'db/data/muby.db'
-)
+db_config = YAML::load(File.open('config/database.yml'))
+ActiveRecord::Base.establish_connection(db_config)
 
 # Set up database tables and columns
 # ActiveRecord::Schema.define do
