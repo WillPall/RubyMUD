@@ -33,7 +33,7 @@ class Muby::Game
   # TODO: this is just a placeholder for testing. Replace with something more
   # data-driven later
   def create_world
-    @world = Muby::World.new
+    @@world = Muby::World.new
 
 
     # roomw = Muby::Room.create(
@@ -102,5 +102,9 @@ class Muby::Game
     #   destination: rooms,
     #   name: 'north'
     # )
+  end
+
+  def self.get_world
+    @@world
   end
 end

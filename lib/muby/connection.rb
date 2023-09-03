@@ -108,7 +108,7 @@ class Muby::Connection < EM::Connection
 
     # ensure they're in a valid room
     if self.user.room.blank?
-      self.user.room = Muby::Room.first
+      self.user.room = Muby::Game.get_world.starting_room
       self.user.save
     end
 

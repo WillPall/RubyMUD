@@ -1,10 +1,12 @@
 class Muby::World
   attr_accessor :rooms
+  attr_accessor :starting_room
 
   def initialize
-    Muby::Room.destroy_all
+    Muby::Room.delete_all
+    Muby::Room::Connection.delete_all
 
-    Muby::World::ImageLoader.load
+    self.starting_room = Muby::World::ImageLoader.load
     # self.rooms = load_rooms
   end
 

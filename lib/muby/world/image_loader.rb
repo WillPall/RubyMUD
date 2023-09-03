@@ -2,31 +2,74 @@ class Muby::World::ImageLoader
   def self.load
     room_rows = []
     world_image = ChunkyPNG::Image.from_file('assets/worlds/world.png')
-    world_image.width.times do |i|
+    # TODO: this is just for testing and moving users to the middle. change
+    # change this later to be a real starting room
+    starting_room = nil
+
+    world_image.height.times do |j|
       room_row = []
       room_rows << room_row
 
-      world_image.height.times do |j|
-        if ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[j, i], false)].to_s.blank?
-          binding.pry
+      world_image.width.times do |i|
+        if ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s.blank?
+          room_row << nil
+          next
         end
 
-        room_row << Muby::Room.create(
-          room_type: ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[j, i], false)].to_s
+        new_room = Muby::Room.create(
+          room_type: ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s
         )
+        room_row << new_room
+
+        if j == (world_image.height / 2).to_i && i == (world_image.width / 2).to_i
+          starting_room = new_room
+        end
       end
     end
 
-    room_rows.each do |row|
-      row.each do |room|
-        begin
-          print Paint['#', ROOM_COLOR_MAPPING[room.room_type.to_sym][0], ROOM_COLOR_MAPPING[room.room_type.to_sym][1]]
-        rescue
-          binding.pry
+    # binding.pry
+    room_rows.each_with_index do |row, y|
+      row.each_with_index do |room, x|
+        # binding.pry
+        # NORTH
+        if room_rows[y - 1].present? && room_rows[y - 1][x].present?
+          Muby::Room::Connection.create(
+            room: room,
+            destination: room_rows[y - 1][x],
+            name: 'north'
+          )
         end
+        # SOUTH
+        if room_rows[y + 1].present? && room_rows[y + 1][x].present?
+          Muby::Room::Connection.create(
+            room: room,
+            destination: room_rows[y + 1][x],
+            name: 'south'
+          )
+        end
+        # EAST
+        if room_rows[y].present? && room_rows[y][x + 1].present?
+          Muby::Room::Connection.create(
+            room: room,
+            destination: room_rows[y][x + 1],
+            name: 'east'
+          )
+        end
+        # WEST
+        if room_rows[y].present? && room_rows[y][x - 1].present?
+          Muby::Room::Connection.create(
+            room: room,
+            destination: room_rows[y][x - 1],
+            name: 'west'
+          )
+        end
+
+        print Muby::Room.map_representation(room)
       end
       puts
     end
+
+    starting_room
   end
 
   ROOM_MAPPING = {
@@ -35,13 +78,5 @@ class Muby::World::ImageLoader
     '#ffff00' => :sand,
     '#329632' => :forest,
     '#aaaa00' => :road
-  }
-
-  ROOM_COLOR_MAPPING = {
-    water: [:blue],
-    grass: [:green, :bright],
-    sand: [:yellow, :bright],
-    forest: [:green],
-    road: [:yellow]
   }
 end
