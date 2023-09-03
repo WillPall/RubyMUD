@@ -59,8 +59,18 @@ class Muby::Connection < EM::Connection
   def receive_data(data)
     @current_response = data.strip
 
-    # skip responding if it's just the client sending us an ACK
-    if is_echo_response?(@current_response)
+    # TODO: we should probably respond to most of these properly. some are
+    # just things like echo ACKs, which we don't care about. some can be killed
+    # or dropped clients. some can be useful (like console dimensions). can
+    # this just be solved in this method by checking that it's an ASCII response
+    # type?
+    #
+    # see for some details about how IAC commands work:
+    #   https://github.com/blinkdog/telnet-stream/blob/master/src/main/coffee/telnetInput.coffee
+    #   https://unix.stackexchange.com/questions/207782/how-are-terminal-length-and-width-forwarded-over-ssh-and-telnet
+    #
+    # skip responding if it's the client sending us a protocol response code
+    if is_protocol_response?(@current_response)
       return
     end
 
@@ -180,13 +190,15 @@ class Muby::Connection < EM::Connection
     send_data("\xFF\xFB\x01".b)
   end
 
-  def is_echo_response?(response)
-    echo_response_codes = [
+  def is_protocol_response?(response)
+    protocol_response_codes = [
+      "\xFF\xF4\xFF\xFD\x06".b, # kill (ctrl+c)
+      # echo protocol ACKs
       "\xFF\xFD\x01".b,
       "\xFF\xFE\x01".b
     ]
 
-    echo_response_codes.include?(response)
+    protocol_response_codes.include?(response)
   end
 
   #
