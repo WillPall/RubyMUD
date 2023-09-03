@@ -15,7 +15,7 @@ class Muby::Command::Sudo < Muby::Command
         when :room_id
           client.send_line(client.user.room.id)
         when :users
-          client.send_line(client.user.room.users.pluck(:username).join(', '))
+          client.send_line(client.user.room.online_users.pluck(:username).join(', '))
         end
       else
         client.send_line('Do not recognize that `sudo` command')

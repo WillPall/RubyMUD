@@ -44,6 +44,7 @@ class Muby::Connection < EM::Connection
 
   def unbind
     @@connected_clients.delete(self)
+    self.user.update_column(:online, false)
 
     if logged_in?
       send_to_clients(Muby::MessageHelper.info_message("#{self.user.name} has left the game."), Muby::ConnectionHelper.other_peers(self))
@@ -149,6 +150,8 @@ class Muby::Connection < EM::Connection
       self.user.room = Muby::Game.get_world.starting_room
       self.user.save
     end
+
+    self.user.update_column(:online, true)
 
     # send the welcome message and let the player know where they are
     send_line('Welcome to Muby!')

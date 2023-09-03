@@ -27,7 +27,7 @@ class Muby::User < ActiveRecord::Base
   end
 
   def room_users
-    self.room.users.reject { |u| u == self }
+    self.room.online_users.reject { |u| u == self }
   end
 
   def prompt

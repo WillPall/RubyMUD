@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 201908052245) do
+ActiveRecord::Schema[7.0].define(version: 202309022254) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 201908052245) do
     t.integer "max_mana"
     t.integer "current_health"
     t.integer "current_mana"
+    t.boolean "online"
   end
 
 end

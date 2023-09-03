@@ -27,6 +27,10 @@ class Muby::Room < ActiveRecord::Base
     self[:description] || DEFAULT_DESCRIPTIONS[self.room_type.to_sym]
   end
 
+  def online_users
+    users.where(online: true)
+  end
+
   def self.map_representation(room = nil)
     if room.present?
       Paint['#', COLOR_MAPPING[room.room_type.to_sym][0], COLOR_MAPPING[room.room_type.to_sym][1]]
