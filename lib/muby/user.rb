@@ -34,7 +34,7 @@ class Muby::User < ActiveRecord::Base
     health = Paint["H:#{percent(self.current_health, self.max_health)}%", :green]
     mana = Paint["M:#{percent(self.current_mana, self.max_mana)}%", :blue]
 
-    "#{Paint['[', :gray]}#{health} #{Paint['|', :white]} #{mana}#{Paint[']', :gray]}"
+    "#{Paint['[', :gray]}#{health} #{Paint['|', :white, :bright]} #{mana}#{Paint[']', :gray]}"
   end
 
   private

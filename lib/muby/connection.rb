@@ -19,7 +19,7 @@ class Muby::Connection < EM::Connection
   def unbind
     @@connected_clients.delete(self)
 
-    send_to_clients(Muby::MessageHelper.info_message("#{@username} has left the game."), other_peers)
+    send_to_clients(Muby::MessageHelper.info_message("#{@username} has left the game."), Muby::ConnectionHelper.other_peers(self))
     puts "[info] #{@username} has left" if entered_username?
   end
 
@@ -117,7 +117,7 @@ class Muby::Connection < EM::Connection
     send_line(self.user.room.render)
     send_line(self.user.prompt)
 
-    send_to_clients(Muby::MessageHelper.info_message("#{@username} has joined the game"), other_peers)
+    send_to_clients(Muby::MessageHelper.info_message("#{@username} has joined the game"), Muby::ConnectionHelper.other_peers(self))
     puts Paint[@username, :green] + ' has joined'
   end
 
@@ -127,10 +127,6 @@ class Muby::Connection < EM::Connection
 
   def number_of_connected_clients
     @@connected_clients.count
-  end
-
-  def other_peers
-    @@connected_clients.reject { |c| self == c }
   end
 
   def send_line(line)
