@@ -11,9 +11,11 @@ A ruby MUD/MUSH/MUx engine currently part of a hobby project.
 
 ## Getting Started
 
-1. Ensure you're using ruby 3.2.2 or later, and bundle install
-1. Run `muby.rb` from the parent directory
-1. You should be able to `telnet localhost 2019` to connect to the server
+1. Ensure you're using ruby 3.2.2 or later, and bundle install.
+1. Install Postgres (tested on 12.x, but should work on older versions). Assumes a `muby` user with the ability to create a database. See `config/database.yml` for defaults or to set different options.
+1. Run `rake db:setup` to create the database with necessary empty structure.
+1. Run `muby.rb` from the parent directory.
+1. You should be able to `telnet localhost 2019` to connect to the server.
 
 ## TODO (i.e. very next on the list)
 
@@ -28,4 +30,4 @@ A ruby MUD/MUSH/MUx engine currently part of a hobby project.
 
 ## License
 
-This software  Copyright John William Pall 2023 unless otherwise indicated
+This software Copyright John William Pall 2023 unless otherwise indicated
