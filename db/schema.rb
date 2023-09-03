@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 201908051905) do
+ActiveRecord::Schema.define(version: 201908051942) do
 
   create_table "muby_room_connections", force: :cascade do |t|
     t.integer "room_id"
@@ -28,6 +28,10 @@ ActiveRecord::Schema.define(version: 201908051905) do
     t.string "name"
     t.string "password"
     t.integer "room_id"
+    t.integer "max_health"
+    t.integer "max_mana"
+    t.integer "current_health"
+    t.integer "current_mana"
   end
 
 end

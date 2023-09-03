@@ -1,4 +1,7 @@
 class Muby::User < ActiveRecord::Base
+  # TODO: Make this a before_create, and make sure existing users have an
+  # actual set of stats
+  after_initialize :initialize_base_stats
   belongs_to :room
 
   attr_accessor :connection
@@ -12,7 +15,28 @@ class Muby::User < ActiveRecord::Base
     self.room = destination_room
     self.save
 
-    self.connection.send_line(destination_room.title)
-    self.connection.send_line(destination_room.description)
+    self.connection.send_line(destination_room.render)
+    self.connection.send_line(self.prompt)
+  end
+
+  def prompt
+    health = Paint["H:#{percent(self.current_health, self.max_health)}%", :green]
+    mana = Paint["M:#{percent(self.current_mana, self.max_mana)}%", :blue]
+
+    "#{Paint['[', :gray]}#{health} #{Paint['|', :white]} #{mana}#{Paint[']', :gray]}"
+  end
+
+  private
+
+  def percent(current, total)
+    ((current / total) * 100).floor
+  end
+
+  def initialize_base_stats
+    self.max_health = 10
+    self.max_mana = 10
+
+    self.current_health = 10
+    self.current_mana = 10
   end
 end

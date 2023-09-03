@@ -45,4 +45,6 @@ EventMachine.run do
   EventMachine.add_periodic_timer(Muby::Game::TICK_INTERVAL) do
     game.tick
   end
+
+  # TODO: We need some sort of console/command interface from the server itself
 end

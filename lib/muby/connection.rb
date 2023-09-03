@@ -40,7 +40,7 @@ class Muby::Connection < EM::Connection
           self.send_line('Command `' + command.to_s + '` not found. Type `help` for a list of commands.')
         end
       else
-        # TODO: render prompt
+        self.send_line(self.user.prompt)
       end
     elsif !entered_username?
       verify_username(data)
@@ -93,22 +93,31 @@ class Muby::Connection < EM::Connection
       self.user = Muby::User.create(
         username: @username,
         name: @username,
-        password: input,
-        room: Muby::Room.first
+        password: input
       )
     elsif existing_user.password != input
       send_line('That password is incorrect. Try again:')
       return
     else
       self.user = existing_user
-      self.user.room = Muby::Room.first
       self.user.save
     end
 
     @@connected_clients.push(self)
     self.user.connection = self
-    send_line('Welcome to Muby! Start chatting now!')
-    send_to_clients(info_message("#{@username} has joined the room"), other_peers)
+
+    # ensure they're in a valid room
+    if self.user.room.blank?
+      self.user.room = Muby::Room.first
+      self.user.save
+    end
+
+    # send the welcome message and let the player know where they are
+    send_line('Welcome to Muby!')
+    send_line(self.user.room.render)
+    send_line(self.user.prompt)
+
+    send_to_clients(info_message("#{@username} has joined the game"), other_peers)
     puts Paint[@username, :green] + ' has joined'
   end
 
