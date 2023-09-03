@@ -7,19 +7,20 @@ require 'active_record'
 
 Bundler.require(:default)
 
-# TODO: Actually implement the persistent DB in SQLite with AR, migrations,
-# schema, etc.
+# TODO: Automate pulling in schema, migrations, etc
 ActiveRecord::Base.establish_connection(
   adapter: 'sqlite3',
-  database: ':memory:'
+  database: 'db/data/muby.db'
 )
 
 # Set up database tables and columns
-ActiveRecord::Schema.define do
-  create_table :muby_users, force: true do |t|
-    t.string :username
-    t.string :name
-    t.string :password
+if !ActiveRecord::Base.connection.table_exists? :muby_users
+  ActiveRecord::Schema.define do
+    create_table :muby_users, force: true do |t|
+      t.string :username
+      t.string :name
+      t.string :password
+    end
   end
 end
 

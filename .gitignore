@@ -1,0 +1,3 @@
+tmp/*
+db/data/*
+!db/data/.keep
