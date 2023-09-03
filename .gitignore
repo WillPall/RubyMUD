@@ -12,5 +12,5 @@ Icon\?
 tmp/*
 
 # Ignore the actual DB data
-db/data/*
-!db/data/.keep
+# db/data/*
+# !db/data/.keep
