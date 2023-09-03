@@ -30,6 +30,7 @@ Dir[File.join(__dir__, 'lib', '*.rb')].each { |file| require file }
 Dir[File.join(__dir__, 'lib', 'muby/*.rb')].each { |file| require file }
 Dir[File.join(__dir__, 'lib', '**/*.rb')].each { |file| require file }
 
+# start the listening server
 EventMachine.run do
   # hit Control + C to stop
   Signal.trap('INT')  { EventMachine.stop }
@@ -39,10 +40,14 @@ EventMachine.run do
 
   # TODO: Figure out how to get this working on external servers (is it just my
   # home router?)
+  # starts the server at localhost:2019
   EventMachine.start_server('0.0.0.0', 2019, Muby::Connection)
   EventMachine.add_periodic_timer(Muby::Game::TICK_INTERVAL) do
     game.tick
   end
+
+  # TODO: make this pretty and put it somehwere else
+  puts 'Server is ready for connections'
 
   # TODO: We need some sort of console/command interface from the server itself
 end
