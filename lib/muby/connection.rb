@@ -28,8 +28,20 @@ class Muby::Connection < EM::Connection
 
     if logged_in?
       command, arguments = data.split(' ', 2)
-      Muby::CommandHandler.dispatch_command(self, command.downcase.to_sym, arguments)
-      # handle_chat_message(data)
+
+      if command.present?
+        command = command.downcase.to_sym
+
+        if Muby::CommandHandler.is_command?(command)
+          Muby::CommandHandler.dispatch_command(self, command, arguments)
+        elsif self.user.can_move?(command)
+          self.user.move_to(command)
+        else
+          self.send_line('Command `' + command.to_s + '` not found. Type `help` for a list of commands.')
+        end
+      else
+        # TODO: render prompt
+      end
     elsif !entered_username?
       verify_username(data)
     else
@@ -94,41 +106,11 @@ class Muby::Connection < EM::Connection
     end
 
     @@connected_clients.push(self)
+    self.user.connection = self
     send_line('Welcome to Muby! Start chatting now!')
     send_to_clients(info_message("#{@username} has joined the room"), other_peers)
     puts Paint[@username, :green] + ' has joined'
   end
-
-
-  #
-  # Message handling
-  #
-
-  def handle_chat_message(message)
-    if command?(message)
-      self.handle_command(message)
-    else
-      send_to_clients(user_message(user, message), other_peers)
-      send_line(feedback_message(message))
-    end
-  end
-
-
-  #
-  # Commands handling
-  #
-
-  def command?(input)
-    input =~ /(exit|status)$/i
-  end
-
-  def handle_command(cmd)
-    case cmd
-    when /exit$/i   then self.close_connection
-    when /status$/i then self.send_line("[chat server] It's #{Time.now.strftime('%H:%M')} and there are #{self.number_of_connected_clients} people in the room")
-    end
-  end
-
 
   #
   # Helpers
