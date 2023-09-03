@@ -12,3 +12,5 @@ gem 'activesupport'
 gem 'sqlite3'
 gem 'activerecord'
 gem 'paint'
+
+gem 'chunky_png'
