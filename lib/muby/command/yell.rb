@@ -7,8 +7,8 @@ class Muby::Command::Yell < Muby::Command
   end
 
   def execute(client, arguments)
-    client.send_to_clients(Muby::MessageHelper.user_message(client.user, arguments, :magenta), Muby::ConnectionHelper.other_peers(client))
-    client.send_line(Muby::MessageHelper.feedback_message(arguments))
+    client.send_to_clients("#{Paint["#{client.user.name} yells:", :magenta]} #{arguments.strip}", Muby::ConnectionHelper.other_peers(client))
+    client.send_line("#{Paint['you yell:', :yellow]} #{arguments.strip}")
   end
 end
 

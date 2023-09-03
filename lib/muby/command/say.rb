@@ -7,8 +7,8 @@ class Muby::Command::Say < Muby::Command
   end
 
   def execute(client, arguments)
-    client.send_to_users(Muby::MessageHelper.user_message(client.user, arguments), client.user.room_users)
-    client.send_line(Muby::MessageHelper.feedback_message(arguments))
+    client.send_to_users("#{Paint["#{client.user.name} says:", :green]} #{arguments.strip}", client.user.room_users)
+    client.send_line("#{Paint['you say:', :yellow]} #{arguments.strip}")
   end
 end
 
