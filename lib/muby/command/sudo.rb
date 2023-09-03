@@ -1,5 +1,10 @@
 class Muby::Command::Sudo < Muby::Command
   def initialize
+    super
+
+    is_special_type!
+    requires_full_name!
+
     self.name = :sudo
     self.description = 'Execute admin commands (only available to admins)'
   end

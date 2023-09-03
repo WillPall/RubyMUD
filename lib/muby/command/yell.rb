@@ -1,5 +1,7 @@
 class Muby::Command::Yell < Muby::Command
   def initialize
+    super
+
     self.name = :yell
     self.description = 'Send a chat message to all users on the server'
   end

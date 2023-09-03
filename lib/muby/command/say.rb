@@ -1,5 +1,7 @@
 class Muby::Command::Say < Muby::Command
   def initialize
+    super
+
     self.name = :say
     self.description = 'Send a chat message to all users in the current room'
   end

@@ -1,5 +1,7 @@
 class Muby::Command::Help < Muby::Command
   def initialize
+    super
+
     self.name = :help
     self.description = 'Lists all available commands'
   end
