@@ -4,7 +4,6 @@ class Muby::Command::Exit < Muby::Command
 
     self.name = :exit
     self.description = 'Save and leave the server'
-    self.aliases << :quit
     self.requires_full_name = true
   end
 
