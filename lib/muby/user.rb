@@ -14,7 +14,7 @@ class Muby::User < ActiveRecord::Base
     # tell everyone we're leaving
     self.connection.send_to_users("#{Paint[self.name, :green]} went #{Paint[destination, :green]}", room_users)
 
-    # actually move the user
+    # get the room associated from the destination they picked, then set that as their room
     destination_room = room.connections.where(name: destination).first.destination
     self.room = destination_room
     self.save

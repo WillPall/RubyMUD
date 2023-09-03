@@ -1,9 +1,10 @@
 class Muby::World::ImageLoader
-  def self.load
+  # Loads the world and creates the rooms and connections from the image file
+  # given at `world_file`. Defaults to `assets/worlds/world.png`.
+  def self.load(world_file = 'assets/worlds/world.png')
+    puts 'Initializing world'
     room_rows = []
-    world_image = ChunkyPNG::Image.from_file('assets/worlds/world.png')
-    # TODO: this is just for testing and moving users to the middle. change
-    # change this later to be a real starting room
+    world_image = ChunkyPNG::Image.from_file(world_file)
     starting_room = nil
 
     world_image.height.times do |j|
@@ -22,6 +23,8 @@ class Muby::World::ImageLoader
         room_row << new_room
 
         if j == (world_image.height / 2).to_i && i == (world_image.width / 2).to_i
+          # TODO: this is just for testing and moving users to the middle.
+          # change this later to be a real starting room
           starting_room = new_room
         end
       end
@@ -64,9 +67,9 @@ class Muby::World::ImageLoader
           )
         end
 
-        print Muby::Room.map_representation(room)
+        # print Muby::Room.map_representation(room)
       end
-      puts
+      # puts
     end
 
     starting_room
