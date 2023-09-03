@@ -12,7 +12,7 @@ class Muby::CommandHandler
       # nothing to do with a user, real command, really anything
       if command_request.present?
         command_request = command_request.downcase.to_sym
-        possible_commands = possible_commands(command_request)
+        possible_commands = get_possible_commands(client, command_request)
 
         if possible_commands.count == 1
           # this is an abbreviated request for something that requires the full name
@@ -39,22 +39,22 @@ class Muby::CommandHandler
 
     ##
     # Bare-bones helper method to make sure that a command has been registered
-    def is_command?(command_request)
-      @@commands[command_request].present?
+    def is_command?(client, command_request)
+      available_commands(client.user)[command_request].present?
     end
 
     ##
     # Return all the possible commands that could match a given command
-    def possible_commands(command_request)
+    def get_possible_commands(client, command_request)
       possible_commands = []
 
       # if it's an exact match, go ahead and return that. this prevents issues where the user types "say" and there
       # are two commands named "say" and "say_something_more" for example
-      if is_command?(command_request)
+      if is_command?(client, command_request)
         return [@@commands[command_request]]
       end
 
-      @@commands.values.each do |c|
+      available_commands(client.user).values.each do |c|
         if c.name.to_s.start_with?(command_request.to_s)
           possible_commands << c
         end
@@ -78,18 +78,14 @@ class Muby::CommandHandler
     end
 
     ##
-    # Return a list of all available commands as a hash with the command as key and command objects as the values.
-    #
-    # `include_special` defaults to false and indicates whether the "special" commands should be included in the list.
-    # For example, `direction` which is actually a wrapper for n/s/e/w etc, or `sudo` which isn't meant for many.
-    def available_commands(include_special = false)
-      commands = @@commands.sort.to_h
-
-      if !include_special
-        commands.reject! { |k,command| command.is_special_type }
+    # Return a list of all available commands for the user based on whether it's
+    # a special type (e.g. sudo for superusers)
+    def available_commands(user)
+      if !user.superuser?
+        return @@commands.reject { |k,command| command.is_special_type }
       end
 
-      commands
+      @@commands
     end
   end
 end
