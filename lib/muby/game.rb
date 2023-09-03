@@ -5,6 +5,7 @@ class Muby::Game
   def initialize
     @last_tick = Time.now.to_f * 1000
 
+    prepare_game_state
     create_world
   end
 
@@ -33,6 +34,16 @@ class Muby::Game
   end
 
   private
+
+  # ensure that the game is in a good state on startup
+  # TODO: probably want an actual table that has info about the overall game
+  # state, such as whether it had a clean shutdown, what was running at the
+  # time, etc.
+  def prepare_game_state
+    # if the server is killed or crashes, user information may be in a bad
+    # state, so clean that up
+    Muby::User.all.update_all(online: false)
+  end
 
   # TODO: this is just a placeholder for testing. Replace with something more
   # data-driven later
