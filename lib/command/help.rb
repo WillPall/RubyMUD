@@ -8,7 +8,7 @@ class Command::Help < Command
 
   def execute(client, arguments)
     client.send_line('Available commands:')
-    CommandHandler.available_commands.each do |k, command|
+    CommandHandler.available_commands(client.user).each do |k, command|
       client.send_line("\t#{command.name} - #{command.description}")
     end
   end
