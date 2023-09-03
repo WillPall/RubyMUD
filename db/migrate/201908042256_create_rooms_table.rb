@@ -1,9 +1,9 @@
 class CreateRoomsTable < ActiveRecord::Migration[5.2]
   def self.up
-    create_table :muby_rooms do |t|
+    create_table :rooms do |t|
     end
   end
   def self.down
-    drop_table :muby_rooms
+    drop_table :rooms
   end
 end

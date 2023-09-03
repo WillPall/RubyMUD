@@ -1,4 +1,4 @@
-class Muby::Command::Quit < Muby::Command
+class Command::Quit < Command
   def initialize
     super
 
@@ -15,4 +15,4 @@ class Muby::Command::Quit < Muby::Command
   end
 end
 
-Muby::CommandHandler.register_command(Muby::Command::Quit.new)
+CommandHandler.register_command(Command::Quit.new)

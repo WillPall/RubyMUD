@@ -1,4 +1,4 @@
-class Muby::World::ImageLoader
+class World::ImageLoader
   # Loads the world and creates the rooms and connections from the image file
   # given at `world_file`. Defaults to `assets/worlds/world.png`.
   def self.load(world_file = 'assets/worlds/world.png')
@@ -17,7 +17,7 @@ class Muby::World::ImageLoader
           next
         end
 
-        new_room = Muby::Room.create(
+        new_room = Room.create(
           room_type: ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s
         )
         room_row << new_room
@@ -36,7 +36,7 @@ class Muby::World::ImageLoader
         # binding.pry
         # NORTH
         if room_rows[y - 1].present? && room_rows[y - 1][x].present?
-          Muby::Room::Connection.create(
+          Room::Connection.create(
             room: room,
             destination: room_rows[y - 1][x],
             name: 'north'
@@ -44,7 +44,7 @@ class Muby::World::ImageLoader
         end
         # SOUTH
         if room_rows[y + 1].present? && room_rows[y + 1][x].present?
-          Muby::Room::Connection.create(
+          Room::Connection.create(
             room: room,
             destination: room_rows[y + 1][x],
             name: 'south'
@@ -52,7 +52,7 @@ class Muby::World::ImageLoader
         end
         # EAST
         if room_rows[y].present? && room_rows[y][x + 1].present?
-          Muby::Room::Connection.create(
+          Room::Connection.create(
             room: room,
             destination: room_rows[y][x + 1],
             name: 'east'
@@ -60,14 +60,14 @@ class Muby::World::ImageLoader
         end
         # WEST
         if room_rows[y].present? && room_rows[y][x - 1].present?
-          Muby::Room::Connection.create(
+          Room::Connection.create(
             room: room,
             destination: room_rows[y][x - 1],
             name: 'west'
           )
         end
 
-        # print Muby::Room.map_representation(room)
+        # print Room.map_representation(room)
       end
       # puts
     end

@@ -14,19 +14,19 @@ ActiveRecord::Schema[7.0].define(version: 202309031150) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "muby_room_connections", force: :cascade do |t|
+  create_table "room_connections", force: :cascade do |t|
     t.integer "room_id"
     t.integer "destination_id"
     t.string "name"
   end
 
-  create_table "muby_rooms", force: :cascade do |t|
+  create_table "rooms", force: :cascade do |t|
     t.string "title"
     t.string "description"
     t.string "room_type"
   end
 
-  create_table "muby_users", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "name"
     t.string "password"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 202309031150) do
     t.integer "current_health"
     t.integer "current_mana"
     t.boolean "online"
-    t.boolean "superadmin", default: false
+    t.boolean "superuser", default: false
   end
 
 end

@@ -1,6 +1,6 @@
 adapter: postgresql
 encoding: unicode
-database: muby
+database: ruby_mud
 pool: 5
-username: muby
+username: ruby_mud
 password:

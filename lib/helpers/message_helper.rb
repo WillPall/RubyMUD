@@ -1,4 +1,4 @@
-class Muby::MessageHelper
+class MessageHelper
   class << self
     def info_message(message)
       "#{Paint['[info]', :cyan]} #{message}"

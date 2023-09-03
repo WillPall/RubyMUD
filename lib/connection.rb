@@ -1,4 +1,4 @@
-class Muby::Connection < EM::Connection
+class Connection < EM::Connection
 
   @@connected_clients = Array.new
 
@@ -47,7 +47,7 @@ class Muby::Connection < EM::Connection
     self.user.update_column(:online, false)
 
     if logged_in?
-      send_to_clients(Muby::MessageHelper.info_message("#{self.user.name} has left the game."), Muby::ConnectionHelper.other_peers(self))
+      send_to_clients(MessageHelper.info_message("#{self.user.name} has left the game."), ConnectionHelper.other_peers(self))
       puts "[info] #{self.user.name} has left"
     end
   end
@@ -87,7 +87,7 @@ class Muby::Connection < EM::Connection
       end
     else
       # we're got a logged in user that needs to deal with a command, so let's send it off to the handler
-      Muby::CommandHandler.handle_command(self, data)
+      CommandHandler.handle_command(self, data)
     end
   end
 
@@ -102,7 +102,7 @@ class Muby::Connection < EM::Connection
     end
 
     # next try to find a user
-    @logging_in_user = Muby::User.find_by_username(@current_response)
+    @logging_in_user = User.find_by_username(@current_response)
 
     if @logging_in_user.present?
       send_line("Welcome back, #{@logging_in_user.username}! Enter your password:")
@@ -112,7 +112,7 @@ class Muby::Connection < EM::Connection
     if @logging_in_user.blank?
       send_line("We haven't seen you before, #{@current_response}. Choose a password:")
       @current_username_state = USERNAME_STATES::NEW
-      @logging_in_user = Muby::User.new(
+      @logging_in_user = User.new(
         username: @current_response,
         name: @current_response
       )
@@ -157,18 +157,18 @@ class Muby::Connection < EM::Connection
 
     # ensure they're in a valid room
     if self.user.room.blank?
-      self.user.room = Muby::Game.get_world.starting_room
+      self.user.room = Game.get_world.starting_room
       self.user.save
     end
 
     self.user.update_column(:online, true)
 
     # send the welcome message and let the player know where they are
-    send_line('Welcome to Muby!')
+    send_line('Welcome to RubyMUD!')
     send_line(self.user.room.render)
     send_line(self.user.prompt)
 
-    send_to_clients(Muby::MessageHelper.info_message("#{self.user.name} has joined the game"), Muby::ConnectionHelper.other_peers(self))
+    send_to_clients(MessageHelper.info_message("#{self.user.name} has joined the game"), ConnectionHelper.other_peers(self))
     puts Paint[self.user.name, :green] + ' has joined'
   end
 

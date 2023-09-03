@@ -1,4 +1,4 @@
-class Muby::Command::Sudo < Muby::Command
+class Command::Sudo < Command
   def initialize
     super
 
@@ -31,4 +31,4 @@ class Muby::Command::Sudo < Muby::Command
   end
 end
 
-Muby::CommandHandler.register_command(Muby::Command::Sudo.new)
+CommandHandler.register_command(Command::Sudo.new)

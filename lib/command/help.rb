@@ -1,4 +1,4 @@
-class Muby::Command::Help < Muby::Command
+class Command::Help < Command
   def initialize
     super
 
@@ -8,10 +8,10 @@ class Muby::Command::Help < Muby::Command
 
   def execute(client, arguments)
     client.send_line('Available commands:')
-    Muby::CommandHandler.available_commands.each do |k, command|
+    CommandHandler.available_commands.each do |k, command|
       client.send_line("\t#{command.name} - #{command.description}")
     end
   end
 end
 
-Muby::CommandHandler.register_command(Muby::Command::Help.new)
+CommandHandler.register_command(Command::Help.new)

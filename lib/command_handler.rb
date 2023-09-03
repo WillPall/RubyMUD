@@ -1,4 +1,4 @@
-class Muby::CommandHandler
+class CommandHandler
   @@commands = {}
 
   class << self
@@ -19,7 +19,7 @@ class Muby::CommandHandler
           if possible_commands.first.requires_full_name && possible_commands.first.name != command_request
             client.send_line("Please type the full command for \"#{possible_commands.first.name}\" to confirm")
           else
-            Muby::CommandHandler.dispatch_command(client, possible_commands.first, arguments)
+            CommandHandler.dispatch_command(client, possible_commands.first, arguments)
           end
         elsif possible_commands.count > 1
           client.send_line("There are multiple commands that match your request:")

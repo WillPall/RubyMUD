@@ -1,4 +1,4 @@
-class Muby::Command::Yell < Muby::Command
+class Command::Yell < Command
   def initialize
     super
 
@@ -7,9 +7,9 @@ class Muby::Command::Yell < Muby::Command
   end
 
   def execute(client, arguments)
-    client.send_to_clients("#{Paint["#{client.user.name} yells:", :magenta]} #{arguments.strip}", Muby::ConnectionHelper.other_peers(client))
+    client.send_to_clients("#{Paint["#{client.user.name} yells:", :magenta]} #{arguments.strip}", ConnectionHelper.other_peers(client))
     client.send_line("#{Paint['you yell:', :yellow]} #{arguments.strip}")
   end
 end
 
-Muby::CommandHandler.register_command(Muby::Command::Yell.new)
+CommandHandler.register_command(Command::Yell.new)

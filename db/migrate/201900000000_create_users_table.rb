@@ -1,9 +1,9 @@
 # NOTE: This was actually created later than the date given, but the abilility
 # to support migrations was added after this table originally existed during
 # initial development. Date string is just for ordering.
-class CreateMubyUsersTable < ActiveRecord::Migration[5.2]
+class CreateUsersTable < ActiveRecord::Migration[5.2]
   def self.up
-    create_table :muby_users do |t|
+    create_table :users do |t|
       t.string :username
       t.string :name
       t.string :password
@@ -15,6 +15,6 @@ class CreateMubyUsersTable < ActiveRecord::Migration[5.2]
     end
   end
   def self.down
-    drop_table :muby_users
+    drop_table :users
   end
 end

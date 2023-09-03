@@ -1,4 +1,4 @@
-class Muby::Room < ActiveRecord::Base
+class Room < ActiveRecord::Base
   has_many :users
   has_many :connections
   has_many :destinations, through: :connections
@@ -93,7 +93,7 @@ class Muby::Room < ActiveRecord::Base
         if room.id == self.id
           output += Paint['&', :white, :bright]
         else
-          output += Muby::Room.map_representation(room)
+          output += Room.map_representation(room)
         end
       end
 

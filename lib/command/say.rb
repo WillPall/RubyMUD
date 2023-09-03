@@ -1,4 +1,4 @@
-class Muby::Command::Say < Muby::Command
+class Command::Say < Command
   def initialize
     super
 
@@ -12,4 +12,4 @@ class Muby::Command::Say < Muby::Command
   end
 end
 
-Muby::CommandHandler.register_command(Muby::Command::Say.new)
+CommandHandler.register_command(Command::Say.new)

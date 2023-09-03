@@ -1,4 +1,4 @@
-class Muby::Game
+class Game
   # number of seconds between each "tick"
   TICK_INTERVAL = 5
 
@@ -20,7 +20,7 @@ class Muby::Game
     # background without blocking EventMachine's timer
     # Thread.new do
     #   puts "Connected users: "
-    #   Muby::Connection.get_clients.each do |client|
+    #   Connection.get_clients.each do |client|
     #     puts "\t#{client.user.name}"
     #   end
     # end
@@ -42,77 +42,77 @@ class Muby::Game
   def prepare_game_state
     # if the server is killed or crashes, user information may be in a bad
     # state, so clean that up
-    Muby::User.all.update_all(online: false)
+    User.all.update_all(online: false)
   end
 
   # TODO: this is just a placeholder for testing. Replace with something more
   # data-driven later
   def create_world
-    @@world = Muby::World.new
+    @@world = World.new
 
 
-    # roomw = Muby::Room.create(
+    # roomw = Room.create(
     #   title: 'North Room',
     #   description: 'This is the room to the north of the +'
     # )
-    # rooma = Muby::Room.create(
+    # rooma = Room.create(
     #   title: 'West Room',
     #   description: 'This is the room to the west of the +'
     # )
-    # rooms = Muby::Room.create(
+    # rooms = Room.create(
     #   title: 'Middle Room',
     #   description: 'This is the room in the middle of the +'
     # )
-    # roomd = Muby::Room.create(
+    # roomd = Room.create(
     #   title: 'East Room',
     #   description: 'This is the room to the east of the +'
     # )
-    # roomx = Muby::Room.create(
+    # roomx = Room.create(
     #   title: 'South Room',
     #   description: 'This is the room to the south of the +'
     # )
 
     # # NORTH
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: roomw,
     #   destination: rooms,
     #   name: 'south'
     # )
     # # MIDDLE
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: rooms,
     #   destination: roomw,
     #   name: 'north'
     # )
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: rooms,
     #   destination: rooma,
     #   name: 'west'
     # )
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: rooms,
     #   destination: roomx,
     #   name: 'south'
     # )
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: rooms,
     #   destination: roomd,
     #   name: 'east'
     # )
     # # WEST
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: rooma,
     #   destination: rooms,
     #   name: 'east'
     # )
     # # EAST
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: roomd,
     #   destination: rooms,
     #   name: 'west'
     # )
     # # SOUTH
-    # Muby::Room::Connection.create(
+    # Room::Connection.create(
     #   room: roomx,
     #   destination: rooms,
     #   name: 'north'
