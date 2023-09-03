@@ -29,7 +29,6 @@ class Muby::Connection < EM::Connection
     if logged_in?
       command, arguments = data.split(' ', 2)
       Muby::CommandHandler.dispatch_command(self, command.downcase.to_sym, arguments)
-      binding.pry
       # handle_chat_message(data)
     elsif !entered_username?
       verify_username(data)

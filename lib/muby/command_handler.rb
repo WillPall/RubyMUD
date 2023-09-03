@@ -7,7 +7,7 @@ class Muby::CommandHandler
     if command.present?
       command.execute(client, arguments)
     else
-      client.send_line('Command not found')
+      client.send_line('Command `' + command_name.to_s + '` not found. Type `help` for a list of commands.')
     end
   end
 
