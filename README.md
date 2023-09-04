@@ -4,14 +4,14 @@ A Ruby MUD/MUSH/MUx engine currently part of a hobby project.
 
 ## Features
 
-* Uses a simple SQLite DB by default to handle storage of user accounts and state, which the option to use Postgres instead.
+* Uses a simple SQLite DB by default to handle storage of user accounts and state, with the option to use Postgres instead.
 * Allows users to login and create a username and password
 * Currently loads a basic world based off a png in the assets folder
 * Supports commands such as directions, and basic chat
 
 ## Getting Started
 
-1. Ensure you're using ruby 3.2.2 or later, and bundle install
+1. Ensure you're using ruby 3.2.2 or later, and `bundle install``
 1. Run `rake db:setup` to create the database with necessary empty structure
 1. Run `ruby_mud.rb` from the parent directory
 1. You should be able to `telnet localhost 2019` to connect to the server
@@ -28,7 +28,6 @@ See `config/database.yml` for defaults or to set different options.
 
 ## TODO (i.e. very next on the list)
 
-1. Refactor some older code and pull it out into the proper places for ease of maintaining
 1. Basic inventory and ability to manage equiptment
 1. Something to fight! What's the point of an RPG with nothing to do?
 1. NPCs
