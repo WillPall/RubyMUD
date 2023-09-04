@@ -7,32 +7,32 @@ class User < ActiveRecord::Base
   attr_accessor :connection
 
   def can_move?(destination)
-    self.room.connections.where(name: destination).present?
+    room.connections.where(name: destination).present?
   end
 
   def move_to(destination)
     # tell everyone we're leaving
-    self.connection.send_to_users("#{Paint[self.name, :green]} went #{Paint[destination, :green]}", room_users)
+    connection.send_to_users("#{Paint[name, :green]} went #{Paint[destination, :green]}", room_users)
 
     # get the room associated from the destination they picked, then set that as their room
     destination_room = room.connections.where(name: destination).first.destination
-    self.room = destination_room
-    self.save
+    room = destination_room
+    save
 
-    self.connection.send_line(destination_room.render)
-    self.connection.send_line(self.prompt)
+    connection.send_line(destination_room.render)
+    connection.send_line(prompt)
 
     # tell everyone we've arrived
-    self.connection.send_to_users("#{Paint[self.name, :green]} entered the area", room_users)
+    connection.send_to_users("#{Paint[name, :green]} entered the area", room_users)
   end
 
   def room_users
-    self.room.online_users.reject { |u| u == self }
+    room.online_users.reject { |u| u == self }
   end
 
   def prompt
-    health = Paint["H:#{percent(self.current_health, self.max_health)}%", :green]
-    mana = Paint["M:#{percent(self.current_mana, self.max_mana)}%", :blue]
+    health = Paint["H:#{percent(current_health, max_health)}%", :green]
+    mana = Paint["M:#{percent(current_mana, max_mana)}%", :blue]
 
     "#{Paint['[', :gray]}#{health} #{Paint['|', :white, :bright]} #{mana}#{Paint[']', :gray]}"
   end

@@ -22,7 +22,7 @@ class CommandHandler
             CommandHandler.dispatch_command(client, possible_commands.first, arguments)
           end
         elsif possible_commands.count > 1
-          client.send_line("There are multiple commands that match your request:")
+          client.send_line('There are multiple commands that match your request:')
           possible_commands.each do |c|
             client.send_line("\t#{c.name}")
           end
@@ -30,7 +30,7 @@ class CommandHandler
         elsif client.user.can_move?(command_request)
           client.user.move_to(command_request)
         else
-          client.send_line('Command `' + command_request.to_s + '` not found. Type `help` for a list of commands.')
+          client.send_line("Command `#{command_request.to_s}` not found. Type `help` for a list of commands.")
         end
       else
         client.send_line(client.user.prompt)

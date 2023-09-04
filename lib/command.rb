@@ -17,7 +17,7 @@ class Command
   end
 
   def execute
-    puts 'Command [' + name.to_s + '] executed'
+    puts "Command [#{name.to_s}] executed"
   end
 
   def is_special_type!

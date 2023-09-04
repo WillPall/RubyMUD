@@ -6,7 +6,7 @@ class World
     # need to determine if a world has been created yet. for now we'll assume
     # if any rooms exist, then the world exists.
     if Room.none?
-      # TODO move starting room out of world load
+      # TODO: move starting room out of world load
       self.starting_room = World::ImageLoader.load
     else
       # TODO: if we already have some rooms, just pick a random starter. this
@@ -14,7 +14,7 @@ class World
       self.starting_room = Room.offset(rand(Room.count)).first
     end
 
-    # TODO these were there at some point to clear the world on startup, but we
+    # TODO: these were there at some point to clear the world on startup, but we
     # don't want that right now. can move that to somewhere else for new worlds
     # or adding things to worlds
     # Room.delete_all

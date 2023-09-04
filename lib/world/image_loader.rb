@@ -30,10 +30,8 @@ class World::ImageLoader
       end
     end
 
-    # binding.pry
     room_rows.each_with_index do |row, y|
       row.each_with_index do |room, x|
-        # binding.pry
         # NORTH
         if room_rows[y - 1].present? && room_rows[y - 1][x].present?
           Room::Connection.create(
@@ -66,10 +64,7 @@ class World::ImageLoader
             name: 'west'
           )
         end
-
-        # print Room.map_representation(room)
       end
-      # puts
     end
 
     starting_room
@@ -81,5 +76,5 @@ class World::ImageLoader
     '#ffff00' => :sand,
     '#329632' => :forest,
     '#aaaa00' => :road
-  }
+  }.freeze
 end

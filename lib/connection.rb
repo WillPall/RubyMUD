@@ -97,7 +97,7 @@ class Connection < EM::Connection
 
   def do_username_handling
     if @current_response.blank?
-      send_line("Blank usernames are not allowed. Try again:")
+      send_line('Blank usernames are not allowed. Try again:')
       return
     end
 
@@ -124,7 +124,7 @@ class Connection < EM::Connection
 
   def do_password_handling
     if @current_response.blank?
-      send_line("Please enter a valid password:")
+      send_line('Please enter a valid password:')
       @current_password_state = PASSWORD_STATES::BLANK
       return
     end
@@ -136,7 +136,7 @@ class Connection < EM::Connection
 
     if @current_username_state == USERNAME_STATES::EXISTING
       if @logging_in_user.password != @current_response
-        send_line("That password is incorrect. Try again:")
+        send_line('That password is incorrect. Try again:')
         @current_password_state = PASSWORD_STATES::INVALID
         return
       end
@@ -169,7 +169,7 @@ class Connection < EM::Connection
     send_line(self.user.prompt)
 
     send_to_clients(MessageHelper.info_message("#{self.user.name} has joined the game"), ConnectionHelper.other_peers(self))
-    puts Paint[self.user.name, :green] + ' has joined'
+    puts "#{Paint[self.user.name, :green]} has joined"
   end
 
   #
