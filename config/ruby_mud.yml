@@ -1,0 +1,3 @@
+# Set whether to use SQLite or Postgres. Defaults to SQLite
+# Change to "postgresql" to use Postgres as the DB engine.
+database_engine: sqlite3

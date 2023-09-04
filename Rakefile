@@ -2,13 +2,18 @@ require "active_record"
 
 namespace :db do
 
+  ruby_mud_config = YAML::load(File.open('config/ruby_mud.yml'))
   db_config       = YAML::load(File.open('config/database.yml'))
-  db_config_admin = db_config.merge({'database' => 'postgres', 'schema_search_path' => 'public'})
+  db_config_admin_postgres = db_config.merge({'database' => 'postgres', 'schema_search_path' => 'public'})
 
   desc "Create the database"
   task :create do
-    ActiveRecord::Base.establish_connection(db_config_admin)
-    ActiveRecord::Base.connection.create_database(db_config["database"])
+    if ruby_mud_config["database"] == "postgresql"
+      ActiveRecord::Base.establish_connection(db_config_admin_postgres)
+      ActiveRecord::Base.connection.create_database(db_config["database"])
+    else
+      `sqlite3 #{db_config["database"]} "VACUUM;"`
+    end
     puts "Database created."
   end
 
@@ -22,8 +27,12 @@ namespace :db do
 
   desc "Drop the database"
   task :drop do
-    ActiveRecord::Base.establish_connection(db_config_admin)
-    ActiveRecord::Base.connection.drop_database(db_config["database"])
+    if ruby_mud_config["database"] == "postgresql"
+      ActiveRecord::Base.establish_connection(db_config_admin_postgres)
+      ActiveRecord::Base.connection.drop_database(db_config["database"])
+    else
+      `rm #{db_config["database"]}`
+    end
     puts "Database deleted."
   end
 

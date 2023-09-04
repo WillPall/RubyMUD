@@ -11,6 +11,5 @@ Icon\?
 # Temp files
 tmp/*
 
-# Ignore the actual DB data
-# db/data/*
-# !db/data/.keep
+# Ignore the actual DB file
+db/ruby_mud.db

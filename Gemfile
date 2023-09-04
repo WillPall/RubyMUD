@@ -11,7 +11,9 @@ gem 'eventmachine'
 
 gem 'activesupport'
 
-gem 'pg'
+gem 'sqlite3'
+# If using Postgres, comment out the above line and uncomment this one
+# gem 'pg'
 gem 'activerecord'
 gem 'paint'
 

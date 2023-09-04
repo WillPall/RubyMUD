@@ -1,6 +1,11 @@
-adapter: postgresql
-encoding: unicode
-database: ruby_mud
-pool: 5
-username: ruby_mud
-password:
+# Default to SQLite with the DB file located at db/ruby_mud.db
+adapter: sqlite3
+database: db/ruby_mud.db
+
+# Use these settings instead if using Postgres (as defined in application.yml)
+# adapter: postgresql
+# encoding: unicode
+# database: ruby_mud
+# pool: 5
+# username: ruby_mud
+# password:
