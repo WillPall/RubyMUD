@@ -3,6 +3,8 @@ class CreateRoomConnections < ActiveRecord::Migration[5.2]
     create_table :room_connections do |t|
       t.integer :source_id
       t.integer :destination_id
+
+      t.timestamps
     end
   end
   def self.down

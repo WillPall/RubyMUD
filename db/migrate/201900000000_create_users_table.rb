@@ -12,6 +12,8 @@ class CreateUsersTable < ActiveRecord::Migration[5.2]
       t.integer :max_mana
       t.integer :current_health
       t.integer :current_mana
+
+      t.timestamps
     end
   end
   def self.down

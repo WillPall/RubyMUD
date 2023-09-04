@@ -14,10 +14,14 @@ ActiveRecord::Schema[7.0].define(version: 202309031150) do
   create_table "room_connections", force: :cascade do |t|
     t.integer "room_id"
     t.integer "destination_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "name"
   end
 
   create_table "rooms", force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "title"
     t.string "description"
     t.string "room_type"
@@ -32,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 202309031150) do
     t.integer "max_mana"
     t.integer "current_health"
     t.integer "current_mana"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "online"
     t.boolean "superuser", default: false
   end
