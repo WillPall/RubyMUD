@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 202309031150) do
+ActiveRecord::Schema[7.0].define(version: 202309040950) do
   create_table "room_connections", force: :cascade do |t|
     t.integer "room_id"
     t.integer "destination_id"
@@ -19,13 +19,8 @@ ActiveRecord::Schema[7.0].define(version: 202309031150) do
     t.string "name"
   end
 
-  create_table "rooms", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "title"
-    t.string "description"
-    t.string "room_type"
-  end
+# Could not dump table "rooms" because of following StandardError
+#   Unknown type 'world' for column 'world_id'
 
   create_table "users", force: :cascade do |t|
     t.string "username"
@@ -40,6 +35,12 @@ ActiveRecord::Schema[7.0].define(version: 202309031150) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "online"
     t.boolean "superuser", default: false
+  end
+
+  create_table "worlds", force: :cascade do |t|
+    t.integer "starting_room_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
