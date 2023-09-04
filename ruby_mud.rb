@@ -8,6 +8,7 @@ require 'active_record'
 Bundler.require(:default)
 
 # TODO: Automate pulling in schema, migrations, etc
+ruby_mud_config = YAML::load(File.open('config/ruby_mud.yml'))
 db_config = YAML::load(File.open('config/database.yml'))
 ActiveRecord::Base.establish_connection(db_config)
 
@@ -37,10 +38,8 @@ EventMachine.run do
 
   game = Game.new
 
-  # TODO: Figure out how to get this working on external servers (is it just my
-  # home router?)
-  # starts the server at localhost:2019
-  EventMachine.start_server('0.0.0.0', 2019, Connection)
+  # TODO: Figure out how to get this working on external servers. may just be local testing issues
+  EventMachine.start_server(ruby_mud_config["hostname"], ruby_mud_config["port"], Connection)
   EventMachine.add_periodic_timer(Game::TICK_INTERVAL) do
     game.tick
   end

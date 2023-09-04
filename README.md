@@ -14,7 +14,7 @@ A Ruby MUD/MUSH/MUx engine currently part of a hobby project.
 1. Ensure you're using ruby 3.2.2 or later, and `bundle install``
 1. Run `rake db:setup` to create the database with necessary empty structure
 1. Run `ruby_mud.rb` from the parent directory
-1. You should be able to `telnet localhost 2019` to connect to the server
+1. You should be able to `telnet localhost 34119` to connect to the server
 
 ## Postgres Setup
 
