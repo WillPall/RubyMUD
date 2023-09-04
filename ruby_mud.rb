@@ -28,6 +28,7 @@ ActiveRecord::Base.establish_connection(db_config)
 # TODO: we have to load the main classes/modules first before loading the rest
 # there's got to be a better way to do this
 Dir[File.join(__dir__, 'lib', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'lib', 'ruby_mud/*.rb')].each { |file| require file }
 Dir[File.join(__dir__, 'lib', '**/*.rb')].each { |file| require file }
 
 # start the listening server
