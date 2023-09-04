@@ -44,11 +44,14 @@ class Connection < EM::Connection
 
   def unbind
     @@connected_clients.delete(self)
-    self.user.update_column(:online, false)
+
+    if user.present?
+      user.update_column(:online, false)
+    end
 
     if logged_in?
-      send_to_clients(MessageHelper.info_message("#{self.user.name} has left the game."), ConnectionHelper.other_peers(self))
-      puts "[info] #{self.user.name} has left"
+      send_to_clients(MessageHelper.info_message("#{user.name} has left the game."), ConnectionHelper.other_peers(self))
+      puts "[info] #{user.name} has left"
     end
   end
 
