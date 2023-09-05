@@ -43,8 +43,8 @@ See `config/database.yml` for defaults or to set different options.
 1. Something to fight! What's the point of an RPG with nothing to do?
 1. NPCs
 1. Places for NPCs to show up (cities, towns, roads, etc.)
-1. Procedular generation for the world itself
-1. Procedular generation for general world text for biomes (stretch goal)
+1. Procedural generation for the world itself
+1. Procedural generation for general world text for biomes (stretch goal)
 1. World editor (either in-game or with a utility application)
 
 ## License
