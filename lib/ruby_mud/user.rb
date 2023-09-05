@@ -37,6 +37,14 @@ class User < ActiveRecord::Base
     "#{Paint['[', :gray]}#{health} #{Paint['|', :white, :bright]} #{mana}#{Paint[']', :gray]}"
   end
 
+  def password
+    BCrypt::Password.new(super)
+  end
+
+  def password=(new_password)
+    super(BCrypt::Password.create(new_password))
+  end
+
   private
 
   def percent(current, total)

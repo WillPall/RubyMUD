@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.2.2'
 
+# for passwords
+gem 'bcrypt'
+
 # command line and development tools
 gem 'pry'
 gem 'rake'
