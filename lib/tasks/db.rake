@@ -1,11 +1,11 @@
 namespace :db do
-  ruby_mud_config = YAML.load(File.open('config/ruby_mud.yml'))
+  ruby_mud = RubyMUD.new
   db_config = YAML.load(File.open('config/database.yml'))
   db_config_admin_postgres = db_config.merge({'database' => 'postgres', 'schema_search_path' => 'public'})
 
   desc 'Create the database'
   task :create do
-    if ruby_mud_config['database'] == 'postgresql'
+    if ruby_mud.config[:database] == 'postgresql'
       ActiveRecord::Base.establish_connection(db_config_admin_postgres)
       ActiveRecord::Base.connection.create_database(db_config['database'])
     else
@@ -24,7 +24,7 @@ namespace :db do
 
   desc 'Drop the database'
   task :drop do
-    if ruby_mud_config['database'] == 'postgresql'
+    if ruby_mud.config[:database] == 'postgresql'
       ActiveRecord::Base.establish_connection(db_config_admin_postgres)
       ActiveRecord::Base.connection.drop_database(db_config['database'])
     else

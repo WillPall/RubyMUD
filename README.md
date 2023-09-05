@@ -22,7 +22,7 @@ If you'd prefer to use Postgres as the database, you'll need to make the followi
 
 * Postgres (tested on 12.x, but should work on older versions)
 * A `ruby_mud` Postgres user with the ability to create a database
-* Update `Gemfile`, `config/database.yml`, and `config/ruby_mud.yml` to use Postgres, following the comment directions in those files
+* Update `Gemfile`, `config/database.yml`, and `config/ruby_mud.rb` to use Postgres, following the comment directions in those files
 
 See `config/database.yml` for defaults or to set different options.
 

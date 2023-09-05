@@ -1,14 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'bundler/setup'
-require 'active_support/all'
-require 'active_record'
+require File.expand_path('../config/ruby_mud', __FILE__)
 
-Bundler.require(:default)
+ruby_mud = RubyMUD.new
 
-# TODO: Automate pulling in schema, migrations, etc
-ruby_mud_config = YAML.load(File.open('config/ruby_mud.yml'))
 db_config = YAML.load(File.open('config/database.yml'))
 ActiveRecord::Base.establish_connection(db_config)
 
@@ -25,12 +20,6 @@ ActiveRecord::Base.establish_connection(db_config)
 #   end
 # end
 
-# TODO: we have to load the main classes/modules first before loading the rest
-# there's got to be a better way to do this
-Dir[File.join(__dir__, 'lib', '*.rb')].each { |file| require file }
-Dir[File.join(__dir__, 'lib', 'ruby_mud/*.rb')].each { |file| require file }
-Dir[File.join(__dir__, 'lib', '**/*.rb')].each { |file| require file }
-
 # start the listening server
 EventMachine.run do
   # hit Control + C to stop
@@ -40,7 +29,7 @@ EventMachine.run do
   game = Game.new
 
   # TODO: Figure out how to get this working on external servers. may just be local testing issues
-  EventMachine.start_server(ruby_mud_config['hostname'], ruby_mud_config['port'], Connection)
+  EventMachine.start_server(ruby_mud.config[:hostname], ruby_mud.config[:port], Connection)
   EventMachine.add_periodic_timer(Game::TICK_INTERVAL) do
     game.tick
   end
