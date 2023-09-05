@@ -16,7 +16,7 @@ class RubyMUD
   attr_accessor :config
 
   def initialize
-    @@secrets = YAML.load(File.open('config/secrets.yml'))
+    # @@secrets = YAML.load(File.open('config/secrets.yml'))
     @config = {
       # Set whether to use SQLite or Postgres. Defaults to SQLite
       # Change to "postgresql" to use Postgres as the DB engine.
@@ -26,7 +26,8 @@ class RubyMUD
     }
   end
 
-  def self.secrets
-    @@secrets ||= YAML.load(File.open('config/secrets.yml'))
-  end
+  # TODO: load secrets and require a secrets.yml once we actually need them (if ever)
+  # def self.secrets
+  #   @@secrets ||= YAML.load(File.open('config/secrets.yml'))
+  # end
 end
