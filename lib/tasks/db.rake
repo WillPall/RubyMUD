@@ -33,11 +33,17 @@ namespace :db do
     puts 'Database deleted.'
   end
 
+  desc 'Seed the database'
+  task :seed do
+    ActiveRecord::Base.establish_connection(db_config)
+    require File.join(__dir__, '../../db', 'seeds.rb')
+  end
+
   desc 'Reset the database'
-  task :reset => [:drop, :create, :migrate]
+  task :reset => [:drop, :create, :migrate, :seed]
 
   desc 'Setup the initial database'
-  task :setup => [:create, :migrate]
+  task :setup => [:create, :migrate, :seed]
 
   desc 'Create a db/schema.rb file that is portable against any DB supported by AR'
   task :schema do

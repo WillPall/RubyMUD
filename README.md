@@ -12,9 +12,13 @@ A Ruby MUD/MUSH/MUx engine currently part of a hobby project.
 ## Getting Started
 
 1. Ensure you're using ruby 3.2.2 or later, and `bundle install``
-1. Run `rake db:setup` to create the database with necessary empty structure
+1. Run `rake db:setup` to create the database with an admin user
 1. Run `ruby_mud.rb` from the parent directory
 1. You should be able to `telnet localhost 34119` to connect to the server
+
+### Default Admin User
+
+A default user is created with the username `admin` and password `admin` that can be used to log in as a superuser.
 
 ## Postgres Setup
 
@@ -25,6 +29,13 @@ If you'd prefer to use Postgres as the database, you'll need to make the followi
 * Update `Gemfile`, `config/database.yml`, and `config/ruby_mud.rb` to use Postgres, following the comment directions in those files
 
 See `config/database.yml` for defaults or to set different options.
+
+## Rake Tasks
+
+* `db:create`, `db:migrate`, `db:drop`, `db:seed` - all similar to commands for those familiar with Rails
+* `db:setup` - creates, migrates, and seeds the DB
+* `db:reset` - drops and then sets up the DB
+* `g:migration [file name]` - creates a blank ActiveRecord migration with the given filename in the `db/migrate` directory
 
 ## TODO (i.e. very next on the list)
 
