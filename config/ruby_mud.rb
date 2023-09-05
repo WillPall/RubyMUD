@@ -16,6 +16,7 @@ class RubyMUD
   attr_accessor :config
 
   def initialize
+    @@secrets = YAML.load(File.open('config/secrets.yml'))
     @config = {
       # Set whether to use SQLite or Postgres. Defaults to SQLite
       # Change to "postgresql" to use Postgres as the DB engine.
@@ -23,5 +24,9 @@ class RubyMUD
       hostname: '0.0.0.0',
       port: 34119
     }
+  end
+
+  def self.secrets
+    @@secrets ||= YAML.load(File.open('config/secrets.yml'))
   end
 end

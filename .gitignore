@@ -13,3 +13,6 @@ tmp/*
 
 # Ignore the actual DB file
 db/ruby_mud.db
+
+# Ignore secrets file for security
+config/secrets.yml
