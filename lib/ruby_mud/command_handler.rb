@@ -71,10 +71,12 @@ class CommandHandler
     end
 
     ##
-    # Very basic method that adds a command to the list of commands by its name. This must be called in every command
-    # definition, or those commands won't exist for use.
+    # Adds a command to the list of commands by its name.
     def register_command(command)
       @@commands[command.name] = command
+
+      # keep the commands in alpha order, just for easy display to users later
+      @@commands = @@commands.sort_by { |k| k.to_s }.to_h
     end
 
     ##

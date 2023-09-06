@@ -12,8 +12,11 @@ class Command
   attr_accessor :requires_full_name
 
   def initialize
-    self.is_special_type = false
-    self.requires_full_name = false
+    @is_special_type = false
+    @requires_full_name = false
+    @name = self.class.name.demodulize.downcase.to_sym
+
+    setup_attributes
   end
 
   def execute
@@ -21,14 +24,14 @@ class Command
   end
 
   def is_special_type!
-    self.is_special_type = true
+    @is_special_type = true
   end
 
   def requires_full_name!
-    self.requires_full_name = true
+    @requires_full_name = true
   end
 
   def can_be_abbreviated?
-    !self.requires_full_name
+    !@requires_full_name
   end
 end

@@ -1,14 +1,4 @@
 class Command::Sudo < Command
-  def initialize
-    super
-
-    is_special_type!
-    requires_full_name!
-
-    self.name = :sudo
-    self.description = 'Execute admin commands (room_id, users)'
-  end
-
   def execute(client, arguments)
     command, arguments = arguments.split(' ', 2)
 
@@ -26,6 +16,13 @@ class Command::Sudo < Command
       client.send_line('Do not recognize that `sudo` command')
     end
   end
-end
 
-CommandHandler.register_command(Command::Sudo.new)
+  private
+
+  def setup_attributes
+    is_special_type!
+    requires_full_name!
+
+    @description = 'Execute admin commands (room_id, users)'
+  end
+end
