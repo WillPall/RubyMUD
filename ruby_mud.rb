@@ -34,8 +34,10 @@ EventMachine.run do
     game.tick
   end
 
+  # attach another connection listener on stdin to handle commands given directly to the server process (e.g. through
+  # the command line)
+  EventMachine.attach($stdin, ServerCommandHandler)
+
   # TODO: make this pretty and put it somehwere else
   puts 'Server is ready for connections'
-
-  # TODO: We need some sort of console/command interface from the server itself
 end

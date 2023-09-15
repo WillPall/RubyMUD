@@ -218,6 +218,9 @@ class Connection < EM::Connection
     self.send_data("#{line}#{(@current_echo_status == ECHO_STATUS::OFF ? "\r" : "")}\n")
   end
 
+  # sends a message to the provided clients. defaults to all connected clients if clients are specified
+  # TODO: move/refactor this and other things to be owned by RubyMUD or a helper (or get rid of helpers in favor of a
+  # better pattern)
   def send_to_clients(message, clients = nil)
     clients ||= @@connected_clients
 
@@ -233,6 +236,12 @@ class Connection < EM::Connection
       # instance variables anymore. For now, we'll just find the client that
       # matches each user
       find_client_by_user(user).send_line(message)
+    end
+  end
+
+  def self.send_to_all_clients(message)
+    @@connected_clients.each do |client|
+      client.send_line(message)
     end
   end
 
