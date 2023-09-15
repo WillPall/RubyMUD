@@ -6,7 +6,7 @@ class CommandHandler
     # Handles the command. Yeah, very inventive. TODO: maybe come up with something smarter on all this naming
     def handle_command(client, data)
       # let's get the command itself, then let the args be their own string. might need to split those up again further
-      command_request, arguments = data.split(' ', 2)
+      command_request, arguments = data.strip.split(' ', 2)
 
       # TODO: all this command stuff here needs to be delegated out of a giant if/else. half of the stuff here has
       # nothing to do with a user, real command, really anything
