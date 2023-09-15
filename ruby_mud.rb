@@ -7,19 +7,6 @@ ruby_mud = RubyMUD.new
 db_config = YAML.load(File.open('config/database.yml'))
 ActiveRecord::Base.establish_connection(db_config)
 
-# Set up database tables and columns
-# ActiveRecord::Schema.define do
-#   create_table :users do |t|
-#     t.string :username
-#     t.string :name
-#     t.string :password
-#     t.integer :room_id
-#   end
-
-#   create_table :rooms, force: true do |t|
-#   end
-# end
-
 # start the listening server
 EventMachine.run do
   # hit Control + C to stop

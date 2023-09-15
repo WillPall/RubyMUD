@@ -15,18 +15,6 @@ class Game
   # eventually need to be synced for things that take a long amount of time to
   # run
   def tick
-    # run any updates needed
-
-    # we put this in a thread so that long running things can be done in the
-    # background without blocking EventMachine's timer
-    # Thread.new do
-    #   puts "Connected users: "
-    #   Connection.get_clients.each do |client|
-    #     puts "\t#{client.user.name}"
-    #   end
-    # end
-
-
     @last_tick = Time.now.to_f
 
     # TODO: BIG TODO: All the `.save` on all these model records (e.g. user,
