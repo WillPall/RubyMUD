@@ -19,8 +19,14 @@ ActiveRecord::Schema[7.0].define(version: 202309040950) do
     t.string "name"
   end
 
-# Could not dump table "rooms" because of following StandardError
-#   Unknown type 'world' for column 'world_id'
+  create_table "rooms", force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "title"
+    t.string "description"
+    t.string "room_type"
+    t.integer "world_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "username"
