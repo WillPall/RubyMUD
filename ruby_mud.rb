@@ -2,7 +2,7 @@
 
 require File.expand_path('../config/ruby_mud', __FILE__)
 
-ruby_mud = RubyMUD.new
+RubyMUD.initialize
 
 db_config = YAML.load(File.open('config/database.yml'))
 ActiveRecord::Base.establish_connection(db_config)
@@ -16,7 +16,7 @@ EventMachine.run do
   game = Game.new
 
   # TODO: Figure out how to get this working on external servers. may just be local testing issues
-  EventMachine.start_server(ruby_mud.config[:hostname], ruby_mud.config[:port], Connection)
+  EventMachine.start_server(RubyMUD.config[:hostname], RubyMUD.config[:port], Connection)
   EventMachine.add_periodic_timer(Game::TICK_INTERVAL) do
     game.tick
   end

@@ -1,7 +1,4 @@
 class Connection < EM::Connection
-
-  @@connected_clients = Array.new
-
   attr_reader :username
   attr_accessor :user
 
@@ -43,14 +40,14 @@ class Connection < EM::Connection
   end
 
   def unbind
-    @@connected_clients.delete(self)
+    RubyMUD.remove_client(self)
 
     if user.present?
       user.update_column(:online, false)
     end
 
     if logged_in?
-      send_to_clients(MessageHelper.info_message("#{user.name} has left the game."), ConnectionHelper.other_peers(self))
+      RubyMUD.send_to_clients(MessageHelper.info_message("#{user.name} has left the game."), ConnectionHelper.other_peers(self))
       puts "[info] #{user.name} has left"
     end
   end
@@ -154,7 +151,7 @@ class Connection < EM::Connection
   end
 
   def do_login_finalization
-    @@connected_clients.push(self)
+    RubyMUD.add_client(self)
     self.user = @logging_in_user
     self.user.connection = self
 
@@ -171,7 +168,7 @@ class Connection < EM::Connection
     send_line(self.user.room.render)
     send_line(self.user.prompt)
 
-    send_to_clients(MessageHelper.info_message("#{self.user.name} has joined the game"), ConnectionHelper.other_peers(self))
+    RubyMUD.send_to_clients(MessageHelper.info_message("#{self.user.name} has joined the game"), ConnectionHelper.other_peers(self))
     puts "#{Paint[self.user.name, :green]} has joined"
   end
 
@@ -204,60 +201,9 @@ class Connection < EM::Connection
     protocol_response_codes.include?(response)
   end
 
-  #
-  # Helpers
-  #
-
-  def number_of_connected_clients
-    @@connected_clients.count
-  end
-
   def send_line(line)
     # we must add a carriage return anywhere echo would be off or the client
     # doesn't know what to do with cursor placement
     self.send_data("#{line}#{(@current_echo_status == ECHO_STATUS::OFF ? "\r" : "")}\n")
-  end
-
-  # sends a message to the provided clients. defaults to all connected clients if clients are specified
-  # TODO: move/refactor this and other things to be owned by RubyMUD or a helper (or get rid of helpers in favor of a
-  # better pattern)
-  def send_to_clients(message, clients = nil)
-    clients ||= @@connected_clients
-
-    clients.each do |client|
-      client.send_line(message)
-    end
-  end
-
-  def send_to_users(message, users)
-    users.each do |user|
-      # TODO: this is extremely gross, but because we're using ActiveRecord
-      # relations, when you load certain things, they don't contain their
-      # instance variables anymore. For now, we'll just find the client that
-      # matches each user
-      find_client_by_user(user).send_line(message)
-    end
-  end
-
-  def self.send_to_all_clients(message)
-    @@connected_clients.each do |client|
-      client.send_line(message)
-    end
-  end
-
-  def self.connected_clients
-    @@connected_clients
-  end
-
-  private
-
-  def find_client_by_user(user)
-    @@connected_clients.each do |client|
-      if client.user.id == user.id
-        return client
-      end
-    end
-
-    nil
   end
 end

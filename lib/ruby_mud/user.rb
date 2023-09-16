@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   def move_to(destination)
     # tell everyone we're leaving
-    connection.send_to_users("#{Paint[name, :green]} went #{Paint[destination, :green]}", room_users)
+    RubyMUD.send_to_users("#{Paint[name, :green]} went #{Paint[destination, :green]}", room_users)
 
     # get the room associated from the destination they picked, then set that as their room
     destination_room = room.connections.where(name: destination).first.destination
@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     connection.send_line(prompt)
 
     # tell everyone we've arrived
-    connection.send_to_users("#{Paint[name, :green]} entered the area", room_users)
+    RubyMUD.send_to_users("#{Paint[name, :green]} entered the area", room_users)
   end
 
   def room_users
