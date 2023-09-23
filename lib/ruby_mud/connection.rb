@@ -1,6 +1,7 @@
 class Connection < EM::Connection
   attr_reader :username
   attr_accessor :user
+  attr_reader :terminal_width, :terminal_height
 
   module PASSWORD_STATES
     INVALID = :invalid
@@ -25,6 +26,22 @@ class Connection < EM::Connection
     OFF = :off
   end
 
+  module IAC_COMMAND
+    NAWS = "\x1F".b
+    ECHO = "\x01".b
+    NONE = :none
+  end
+
+  module IAC_ACTION
+    WILL = "\xFB".b
+    WONT = "\xFC".b
+    DO = "\xFD".b
+    DONT = "\xFE".b
+    SB = "\xFA".b
+  end
+
+  IAC_START = "\xFF".b
+
   #
   # EventMachine handlers
   #
@@ -37,6 +54,9 @@ class Connection < EM::Connection
 
     puts 'A client has connected...'
     send_line('Enter your username:')
+
+    # request NAWS
+    send_data(IAC_START + IAC_ACTION::DO + IAC_COMMAND::NAWS)
   end
 
   def unbind
@@ -59,18 +79,24 @@ class Connection < EM::Connection
   def receive_data(data)
     @current_response = data.strip
 
-    # TODO: we should probably respond to most of these properly. some are
-    # just things like echo ACKs, which we don't care about. some can be killed
-    # or dropped clients. some can be useful (like console dimensions). can
-    # this just be solved in this method by checking that it's an ASCII response
-    # type?
-    #
-    # see for some details about how IAC commands work:
+    # TODO: move this into a telnet IAC handler or something
+    # IAC telnet protocol responses:
     #   https://github.com/blinkdog/telnet-stream/blob/master/src/main/coffee/telnetInput.coffee
     #   https://unix.stackexchange.com/questions/207782/how-are-terminal-length-and-width-forwarded-over-ssh-and-telnet
+    #   https://users.cs.cf.ac.uk/Dave.Marshall/Internet/node141.html
     #
     # skip responding if it's the client sending us a protocol response code
     if is_protocol_response?(@current_response)
+      # WILL NAWS response to DO NAWS
+      if @current_response[1] == IAC_ACTION::WILL && @current_response[2] == IAC_COMMAND::NAWS
+        @terminal_width = @current_response[6,2].unpack('n')[0]
+        @terminal_height = @current_response[8,2].unpack('n')[0]
+      # SB NAWS response to client window change
+      elsif @current_response[1] == IAC_ACTION::SB && @current_response[2] == IAC_COMMAND::NAWS
+        @terminal_width = @current_response[3,2].unpack('n')[0]
+        @terminal_height = @current_response[5,2].unpack('n')[0]
+      end
+
       return
     end
 
@@ -182,23 +208,16 @@ class Connection < EM::Connection
 
   def enable_echo
     @current_echo_status = ECHO_STATUS::ON
-    send_data("\xFF\xFC\x01".b)
+    send_data(IAC_START + IAC_ACTION::WONT + IAC_COMMAND::ECHO)
   end
 
   def disable_echo
     @current_echo_status = ECHO_STATUS::OFF
-    send_data("\xFF\xFB\x01".b)
+    send_data(IAC_START + IAC_ACTION::WILL + IAC_COMMAND::ECHO)
   end
 
   def is_protocol_response?(response)
-    protocol_response_codes = [
-      "\xFF\xF4\xFF\xFD\x06".b, # kill (ctrl+c)
-      # echo protocol ACKs
-      "\xFF\xFD\x01".b,
-      "\xFF\xFE\x01".b
-    ]
-
-    protocol_response_codes.include?(response)
+    response[0] == IAC_START
   end
 
   def send_line(line)
