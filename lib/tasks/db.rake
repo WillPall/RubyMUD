@@ -41,10 +41,10 @@ namespace :db do
   end
 
   desc 'Reset the database'
-  task :reset => [:drop, :create, :migrate, :seed]
+  task reset: [:drop, :create, :migrate, :seed]
 
   desc 'Setup the initial database'
-  task :setup => [:create, :migrate, :seed]
+  task setup: [:create, :migrate, :seed]
 
   desc 'Create a db/schema.rb file that is portable against any DB supported by AR'
   task :schema do
@@ -56,6 +56,15 @@ namespace :db do
     end
   end
 
+  desc 'Roll the schema back to the previous version (specify steps w/ STEP=n).'
+  task :rollback do
+    step = ENV['STEP'] ? ENV['STEP'].to_i : 1
+
+    ActiveRecord::Base.establish_connection(db_config)
+    ActiveRecord::Base.connection.migration_context.rollback(step)
+
+    Rake::Task['db:schema'].invoke
+  end
 end
 
 namespace :g do
