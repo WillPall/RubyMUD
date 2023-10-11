@@ -15,11 +15,10 @@ class User < ActiveRecord::Base
     RubyMUD.send_to_users("#{Paint[name, :green]} went #{Paint[destination, :green]}", room_users)
 
     # get the room associated from the destination they picked, then set that as their room
-    destination_room = room.connections.where(name: destination).first.destination
-    room = destination_room
+    self.room = room.connections.where(name: destination).first.destination
     save
 
-    connection.send_line(destination_room.render)
+    connection.send_line(room.render)
     connection.send_line(prompt)
 
     # tell everyone we've arrived
