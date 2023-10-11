@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 202309040950) do
+ActiveRecord::Schema[7.0].define(version: 202309261535) do
+  create_table "items_items", force: :cascade do |t|
+    t.string "type"
+    t.string "name"
+    t.string "description"
+    t.integer "weight"
+    t.integer "value"
+    t.integer "holdable_id"
+    t.string "holdable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "room_connections", force: :cascade do |t|
     t.integer "room_id"
     t.integer "destination_id"

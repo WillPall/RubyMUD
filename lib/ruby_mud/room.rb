@@ -1,4 +1,6 @@
 class Room < ActiveRecord::Base
+  include ItemHolder
+
   has_many :users
   has_many :connections
   has_many :destinations, through: :connections
@@ -8,6 +10,14 @@ class Room < ActiveRecord::Base
     output = map_view
     output += "\n" + Paint[self.title, :yellow] + "\n"
     output += self.description + "\n"
+
+    if items.present?
+      output += 'Items: '
+
+      items.each do |item|
+        output += "\t#{item.name}\n"
+      end
+    end
 
     if self.connections.present?
       output += 'Exits: '

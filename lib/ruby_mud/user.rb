@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include ItemHolder
+
   # TODO: Make this a before_create, and make sure existing users have an
   # actual set of stats
   after_initialize :initialize_base_stats

@@ -9,6 +9,7 @@ Bundler.require(:default)
 # there's got to be a better way to do this
 # TODO: make sure this syntax and usage is the best (e.g. why use join instead of expand_path?)
 Dir[File.join(__dir__, '../lib', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, '../lib', 'ruby_mud/concerns/*.rb')].each { |file| require file }
 Dir[File.join(__dir__, '../lib', 'ruby_mud/*.rb')].each { |file| require file }
 Dir[File.join(__dir__, '../lib', '**/*.rb')].each { |file| require file }
 

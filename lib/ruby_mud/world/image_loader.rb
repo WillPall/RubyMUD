@@ -26,6 +26,9 @@ class World::ImageLoader
           # TODO: this is just for testing and moving users to the middle.
           # change this later to be a real starting room
           world.starting_room = new_room
+
+          new_room.items << Items::Item.all
+          new_room.save
         end
       end
     end
