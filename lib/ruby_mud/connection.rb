@@ -1,6 +1,6 @@
 class Connection < EM::Connection
   attr_reader :username
-  attr_accessor :user
+  attr_accessor :user, :prompt_shown
   attr_reader :terminal_width, :terminal_height
 
   module PASSWORD_STATES
@@ -192,7 +192,6 @@ class Connection < EM::Connection
     # send the welcome message and let the player know where they are
     send_line('Welcome to RubyMUD!')
     send_line(self.user.room.render)
-    send_line(self.user.prompt)
 
     RubyMUD.send_to_clients(MessageHelper.info_message("#{self.user.name} has joined the game"), ConnectionHelper.other_peers(self))
     puts "#{Paint[self.user.name, :green]} has joined"
@@ -221,8 +220,30 @@ class Connection < EM::Connection
   end
 
   def send_line(line)
+    clear_prompt
+
     # we must add a carriage return anywhere echo would be off or the client
     # doesn't know what to do with cursor placement
     self.send_data("#{line}#{(@current_echo_status == ECHO_STATUS::OFF ? "\r" : "")}\n")
+
+    show_prompt
+  end
+
+  def prompt_shown?
+    self.prompt_shown
+  end
+
+  def clear_prompt
+    if logged_in? && prompt_shown?
+      send_data("\e[2K\r")
+      self.prompt_shown = false
+    end
+  end
+
+  def show_prompt(force: false)
+    if logged_in? && (!prompt_shown? || force)
+      send_data(user.prompt)
+      self.prompt_shown = true
+    end
   end
 end

@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
     save
 
     connection.send_line(room.render)
-    connection.send_line(prompt)
 
     # tell everyone we've arrived
     RubyMUD.send_to_users("#{Paint[name, :green]} entered the area", room_users)
@@ -35,7 +34,7 @@ class User < ActiveRecord::Base
     health = Paint["H:#{percent(current_health, max_health)}%", :green]
     mana = Paint["M:#{percent(current_mana, max_mana)}%", :blue]
 
-    "#{Paint['[', :gray]}#{health} #{Paint['|', :white, :bright]} #{mana}#{Paint[']', :gray]}"
+    "#{Paint['[', :gray]}#{health} #{Paint['|', :white, :bright]} #{mana}#{Paint[']', :gray]} > "
   end
 
   def password

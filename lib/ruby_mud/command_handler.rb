@@ -33,7 +33,8 @@ class CommandHandler
           client.send_line("Command `#{command_request.to_s}` not found. Type `help` for a list of commands.")
         end
       else
-        client.send_line(client.user.prompt)
+        # force showing a prompt on empty command
+        client.show_prompt(force: true)
       end
     end
 
