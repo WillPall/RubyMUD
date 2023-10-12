@@ -7,14 +7,14 @@ class Command
   # TODO: originally I wrote this as `is_visible?` to denote that it wasn't supposed to show up in any lists
   # but that it should still be a commamnd that could be run. specifically for the `direction` command for
   # moving between areas. let's figure out how better to do this 
-  attr_accessor :is_special_type
+  attr_accessor :is_admin_command
   # whether the user needs to type the full command name to execute
   attr_accessor :requires_full_name
 
   def initialize
-    @is_special_type = false
+    @is_admin_command = false
     @requires_full_name = false
-    @name = self.class.name.demodulize.downcase.to_sym
+    @name = self.class.name.demodulize.underscore.dasherize.to_sym
 
     setup_attributes
   end
@@ -23,8 +23,8 @@ class Command
     puts "Command [#{name.to_s}] executed"
   end
 
-  def is_special_type!
-    @is_special_type = true
+  def is_admin_command!
+    @is_admin_command = true
   end
 
   def requires_full_name!
