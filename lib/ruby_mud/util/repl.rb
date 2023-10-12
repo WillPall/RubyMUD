@@ -12,6 +12,8 @@ class REPL
   end
 
   def start
+    repl_binding = binding
+
     # TODO: something in here is causing all future terminal commands in that session to append a newline character.
     # this persists after the server is killed and a new terminal window must be opened
     loop do
@@ -29,7 +31,7 @@ class REPL
       # catch anything here and just print it back. NOTE: this catches syntax errors too, so anything within `begin`
       # needs to be foolproof
       begin
-        evaluated_command = eval(command)
+        evaluated_command = eval(command, repl_binding)
       rescue Exception => e
         puts e.inspect
       end
