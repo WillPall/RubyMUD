@@ -1,9 +1,10 @@
 class Game
   # number of seconds between each "tick"
-  TICK_INTERVAL = 5
+  TICK_INTERVAL = 0.01
 
   def initialize
-    @last_tick = Time.now.to_f * 1000
+    @last_tick = Time.now
+    @updateables = []
 
     initialize_commands
     prepare_game_state
@@ -15,11 +16,20 @@ class Game
   # eventually need to be synced for things that take a long amount of time to
   # run
   def tick
-    @last_tick = Time.now.to_f
+    @elapsed_time = Time.now - @last_tick
+    @last_tick = Time.now
 
     # TODO: BIG TODO: All the `.save` on all these model records (e.g. user,
     # room, etc) need to be moved to a periodic save_all kind of thing, as well
     # as saving on player leave
+
+    @updateables.each do |u|
+      u.update(@elapsed_time)
+    end
+  end
+
+  def register_updateable(updateable)
+    @updateables << updateable
   end
 
   private

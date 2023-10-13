@@ -13,12 +13,12 @@ EventMachine.run do
   Signal.trap('INT')  { EventMachine.stop }
   Signal.trap('TERM') { EventMachine.stop }
 
-  game = Game.new
+  RubyMUD.game = Game.new
 
   # TODO: Figure out how to get this working on external servers. may just be local testing issues
   EventMachine.start_server(RubyMUD.config[:hostname], RubyMUD.config[:port], Connection)
   EventMachine.add_periodic_timer(Game::TICK_INTERVAL) do
-    game.tick
+    RubyMUD.game.tick
   end
 
   # attach another connection listener on stdin to handle commands given directly to the server process (e.g. through

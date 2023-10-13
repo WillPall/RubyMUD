@@ -32,6 +32,24 @@ module RubyMUD
       @@config
     end
 
+    def game=(game)
+      @@game = game
+    end
+
+    def game
+      @@game
+    end
+
+    def register_updateable(updateable)
+      game.updateables << updateable
+    end
+
+    def update(delta)
+      @@updateables.each do |u|
+        u.update(delta)
+      end
+    end
+
     # TODO: load secrets and require a secrets.yml once we actually need them (if ever)
     # def secrets
     #   @@secrets ||= YAML.load(File.open('config/secrets.yml'))

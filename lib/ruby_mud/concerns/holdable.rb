@@ -1,4 +1,4 @@
-module ItemHolder
+module Holdable
   extend ActiveSupport::Concern
 
   included do
