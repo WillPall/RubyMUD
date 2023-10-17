@@ -7,8 +7,6 @@ class Game
     @updateables = []
 
     initialize_commands
-    prepare_game_state
-    load_world
   end
 
   # TODO: EventMachine doesn't give any guarantees around timing. It will be
@@ -32,15 +30,6 @@ class Game
     @updateables << updateable
   end
 
-  private
-
-  # Instantiates and registers all commands that are subclasses of `Command`
-  def initialize_commands
-    Command.descendants.each do |command|
-      CommandHandler.register_command(command.new)
-    end
-  end
-
   # ensure that the game is in a good state on startup
   # TODO: probably want an actual table that has info about the overall game
   # state, such as whether it had a clean shutdown, what was running at the
@@ -59,6 +48,15 @@ class Game
       @@world.save
     else
       @@world = World.first
+    end
+  end
+
+  private
+
+  # Instantiates and registers all commands that are subclasses of `Command`
+  def initialize_commands
+    Command.descendants.each do |command|
+      CommandHandler.register_command(command.new)
     end
   end
 

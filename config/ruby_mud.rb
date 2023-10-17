@@ -26,6 +26,7 @@ module RubyMUD
       }
 
       @@connected_clients = Array.new
+      @@game = Game.new
     end
 
     def config
