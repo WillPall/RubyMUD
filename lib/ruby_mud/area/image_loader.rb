@@ -1,7 +1,7 @@
-class World::ImageLoader
+class Area::ImageLoader
   # Loads the world and creates the rooms and connections from the image file
-  # given at `world_file`. Defaults to `assets/worlds/world.png`.
-  def self.load(world, world_file = 'assets/worlds/world.png')
+  # given at `world_file`. Defaults to `assets/areas/world.png`.
+  def self.load(area, world_file = 'assets/areas/world.png')
     puts 'Initializing world'
     room_rows = []
     world_image = ChunkyPNG::Image.from_file(world_file)
@@ -18,14 +18,14 @@ class World::ImageLoader
 
         new_room = Room.create(
           room_type: ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s,
-          world: world
+          area: area
         )
         room_row << new_room
 
         if j == (world_image.height / 2).to_i && i == (world_image.width / 2).to_i
           # TODO: this is just for testing and moving users to the middle.
           # change this later to be a real starting room
-          world.starting_room = new_room
+          area.starting_room = new_room
 
           new_room.items << Items::Item.all
           new_room.save

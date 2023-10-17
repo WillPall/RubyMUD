@@ -4,7 +4,7 @@ class Room < ActiveRecord::Base
   has_many :users
   has_many :connections
   has_many :destinations, through: :connections
-  belongs_to :world
+  belongs_to :area
 
   def render
     output = map_view

@@ -36,14 +36,14 @@ class Game
     User.all.update_all(online: false)
   end
 
-  # Loads the first existing world, or creates one based on the default world image file if it doesn't exist
+  # Loads the first existing area, or creates one based on the default world image file if it doesn't exist
   def load_world
-    if World.none?
-      @@world = World.new
-      World::ImageLoader.load(@@world)
-      @@world.save
+    if Area.none?
+      @@world_area = Area.new
+      Area::ImageLoader.load(@@world_area)
+      @@world_area.save
     else
-      @@world = World.first
+      @@world_area = Area.first
     end
   end
 
@@ -57,6 +57,6 @@ class Game
   end
 
   def self.get_world
-    @@world
+    @@world_area
   end
 end
