@@ -18,7 +18,9 @@ class Area::ImageLoader
 
         new_room = Room.create(
           room_type: ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s,
-          area: area
+          area: area,
+          x: i,
+          y: j
         )
         room_row << new_room
 
@@ -33,6 +35,8 @@ class Area::ImageLoader
       end
     end
 
+    # TODO: we may be able to get away with not doing connections for n/s/e/w now that we have x/y positions in each
+    # area for all the rooms. will just need to check for x/y positions of neighbors when showing/going a direction
     room_rows.each_with_index do |row, y|
       row.each_with_index do |room, x|
         # NORTH
