@@ -100,7 +100,16 @@ class Room < ActiveRecord::Base
     output = ''
 
     map.each_with_index do |row, y|
+      if row.blank?
+        next
+      end
+
       row.each_with_index do |room, x|
+        if room.blank?
+          output += ' '
+          next
+        end
+
         if room.id == self.id
           output += Paint['&', :white, :bright]
         else

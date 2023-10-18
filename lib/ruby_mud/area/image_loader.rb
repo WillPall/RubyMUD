@@ -36,7 +36,7 @@ class Area::ImageLoader
     room_rows.each_with_index do |row, y|
       row.each_with_index do |room, x|
         # NORTH
-        if room_rows[y - 1].present? && room_rows[y - 1][x].present?
+        if (y - 1) >= 0 && room_rows[y - 1].present? && room_rows[y - 1][x].present?
           Room::Connection.create(
             room: room,
             destination: room_rows[y - 1][x],
@@ -60,7 +60,7 @@ class Area::ImageLoader
           )
         end
         # WEST
-        if room_rows[y].present? && room_rows[y][x - 1].present?
+        if (x - 1) >= 0 && room_rows[y].present? && room_rows[y][x - 1].present?
           Room::Connection.create(
             room: room,
             destination: room_rows[y][x - 1],
