@@ -11,13 +11,15 @@ class Area::ImageLoader
       room_rows << room_row
 
       world_image.width.times do |i|
-        if ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s.blank?
+        room_type = RoomType.where(image_color: ChunkyPNG::Color.to_hex(world_image[i, j], false)).first
+
+        if room_type.blank?
           room_row << nil
           next
         end
 
         new_room = Room.create(
-          room_type: ROOM_MAPPING[ChunkyPNG::Color.to_hex(world_image[i, j], false)].to_s,
+          room_type: room_type,
           area: area,
           x: i,
           y: j
@@ -74,12 +76,4 @@ class Area::ImageLoader
       end
     end
   end
-
-  ROOM_MAPPING = {
-    '#0000ff' => :water,
-    '#00ff00' => :grass,
-    '#ffff00' => :sand,
-    '#329632' => :forest,
-    '#aaaa00' => :road
-  }.freeze
 end

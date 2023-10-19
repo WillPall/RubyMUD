@@ -5,6 +5,7 @@ class Room < ActiveRecord::Base
   has_many :connections
   has_many :destinations, through: :connections
   belongs_to :area
+  belongs_to :room_type
 
   def render
     output = map_view
@@ -31,23 +32,19 @@ class Room < ActiveRecord::Base
   end
 
   def title
-    self[:title] || DEFAULT_TITLES[self.room_type.to_sym]
+    self[:title] || self.room_type.default_title
   end
 
   def description
-    self[:description] || DEFAULT_DESCRIPTIONS[self.room_type.to_sym]
+    self[:description] || self.room_type.default_description
   end
 
   def online_users
     users.where(online: true)
   end
 
-  def self.map_representation(room = nil)
-    if room.present?
-      Paint['#', COLOR_MAPPING[room.room_type.to_sym][0], COLOR_MAPPING[room.room_type.to_sym][1]]
-    else
-      print Paint['*', :red, :bright]
-    end
+  def map_representation
+    Paint[self.room_type.map_character, self.room_type.map_color.to_sym, (self.room_type.map_is_bright? ? :bright : nil)]
   end
 
   protected
@@ -69,30 +66,6 @@ class Room < ActiveRecord::Base
 
   private
 
-  DEFAULT_TITLES = {
-    water: 'Deep Water',
-    grass: 'Grassy Plain',
-    sand: 'Sandy Beach',
-    forest: 'Dense Forest',
-    road: 'Road'
-  }
-
-  DEFAULT_DESCRIPTIONS = {
-    water: "You're in the middle of a deep pool of water",
-    grass: 'Waves of grass and wheat surround you',
-    sand: 'The sand crunches between your toes',
-    forest: 'The trees whisper in the wind around you',
-    road: 'This road leads to Rome'
-  }
-
-  COLOR_MAPPING = {
-    water: [:blue],
-    grass: [:green, :bright],
-    sand: [:yellow, :bright],
-    forest: [:green],
-    road: [:yellow]
-  }
-
   def map_view(horizontal_radius = 6, vertical_radius = 3)
     map = self.area.map(horizontal_radius: horizontal_radius, vertical_radius: vertical_radius, starting_room: self)
     output = ''
@@ -111,7 +84,7 @@ class Room < ActiveRecord::Base
         if room.id == self.id
           output += Paint['&', :white, :bright]
         else
-          output += Room.map_representation(room)
+          output += room.map_representation
         end
       end
 
