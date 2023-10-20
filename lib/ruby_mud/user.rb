@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  include Holdable, Updateable
+  include Holdable, StateUpdateable
 
   # TODO: Make this a before_create, and make sure existing users have an
   # actual set of stats

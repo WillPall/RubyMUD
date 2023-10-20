@@ -1,10 +1,10 @@
-module Updateable
+module StateUpdateable
   extend ActiveSupport::Concern
 
   included do
     after_initialize :register_updateable
 
-    def update(delta)
+    def state_update(delta)
       # should be overwritten by the updateable class
     end
   end

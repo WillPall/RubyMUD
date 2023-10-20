@@ -18,7 +18,7 @@ class Game
     @last_tick = Time.now
 
     @updateables.each do |u|
-      u.update(@elapsed_time)
+      u.state_update(@elapsed_time)
     end
   end
 

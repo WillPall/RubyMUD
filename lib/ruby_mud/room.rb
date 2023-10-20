@@ -1,5 +1,5 @@
 class Room < ActiveRecord::Base
-  include Holdable, Updateable
+  include Holdable, StateUpdateable
 
   has_many :users
   has_many :connections
