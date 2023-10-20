@@ -7,10 +7,12 @@ class Room < ActiveRecord::Base
   belongs_to :area
   belongs_to :room_type
 
+  after_create :create_connections, :adjust_coordinates
+
   def render
     output = map_view
-    output += "\n" + Paint[self.title, :yellow] + "\n"
-    output += self.description + "\n"
+    output += "\n" + Paint[self.display_title, :yellow] + "\n"
+    output += self.display_description + "\n"
 
     if items.present?
       output += 'Items: '
@@ -31,12 +33,12 @@ class Room < ActiveRecord::Base
     output
   end
 
-  def title
-    self[:title] || self.room_type.default_title
+  def display_title
+    self.title || self.room_type.default_title
   end
 
-  def description
-    self[:description] || self.room_type.default_description
+  def display_description
+    self.description || self.room_type.default_description
   end
 
   def online_users
@@ -65,6 +67,50 @@ class Room < ActiveRecord::Base
   end
 
   private
+
+  def create_connections
+    north = Room.where(area: self.area, x: self.x, y: self.y - 1).first
+    south = Room.where(area: self.area, x: self.x, y: self.y + 1).first
+    east = Room.where(area: self.area, x: self.x + 1, y: self.y).first
+    west = Room.where(area: self.area, x: self.x - 1, y: self.y).first
+
+    if north.present?
+      self.connections << Room::Connection.create(room: self, destination: north, name: 'north')
+      north.connections << Room::Connection.create(room: north, destination: self, name: 'south')
+    end
+    if south.present?
+      self.connections << Room::Connection.create(room: self, destination: south, name: 'south')
+      south.connections << Room::Connection.create(room: south, destination: self, name: 'north')
+    end
+    if east.present?
+      self.connections << Room::Connection.create(room: self, destination: east, name: 'east')
+      east.connections << Room::Connection.create(room: east, destination: self, name: 'west')
+    end
+    if west.present?
+      self.connections << Room::Connection.create(room: self, destination: west, name: 'west')
+      west.connections << Room::Connection.create(room: west, destination: self, name: 'east')
+    end
+  end
+
+  def adjust_coordinates
+    x_difference = 0
+    y_difference = 0
+
+    if self.x < 0
+      x_difference = -self.x
+    end
+    if self.y < 0
+      y_difference = -self.y
+    end
+
+    if x_difference > 0 || y_difference > 0
+      Room.where(area: self.area).each do |room|
+        room.x += x_difference
+        room.y += y_difference
+        room.save
+      end
+    end
+  end
 
   def map_view(horizontal_radius = 6, vertical_radius = 3)
     map = self.area.map(horizontal_radius: horizontal_radius, vertical_radius: vertical_radius, starting_room: self)

@@ -36,44 +36,5 @@ class Area::ImageLoader
         end
       end
     end
-
-    # TODO: we may be able to get away with not doing connections for n/s/e/w now that we have x/y positions in each
-    # area for all the rooms. will just need to check for x/y positions of neighbors when showing/going a direction
-    room_rows.each_with_index do |row, y|
-      row.each_with_index do |room, x|
-        # NORTH
-        if (y - 1) >= 0 && room_rows[y - 1].present? && room_rows[y - 1][x].present?
-          Room::Connection.create(
-            room: room,
-            destination: room_rows[y - 1][x],
-            name: 'north'
-          )
-        end
-        # SOUTH
-        if room_rows[y + 1].present? && room_rows[y + 1][x].present?
-          Room::Connection.create(
-            room: room,
-            destination: room_rows[y + 1][x],
-            name: 'south'
-          )
-        end
-        # EAST
-        if room_rows[y].present? && room_rows[y][x + 1].present?
-          Room::Connection.create(
-            room: room,
-            destination: room_rows[y][x + 1],
-            name: 'east'
-          )
-        end
-        # WEST
-        if (x - 1) >= 0 && room_rows[y].present? && room_rows[y][x - 1].present?
-          Room::Connection.create(
-            room: room,
-            destination: room_rows[y][x - 1],
-            name: 'west'
-          )
-        end
-      end
-    end
   end
 end

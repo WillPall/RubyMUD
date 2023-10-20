@@ -21,13 +21,28 @@ GEM
     method_source (1.0.0)
     mini_portile2 (2.8.4)
     minitest (5.19.0)
+    mustermann (3.0.0)
+      ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.9)
     paint (2.3.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    puma (6.4.0)
+      nio4r (~> 2.0)
+    rack (2.2.8)
+    rack-protection (3.1.0)
+      rack (~> 2.2, >= 2.2.4)
     rake (13.0.6)
+    ruby2_keywords (0.0.5)
+    sinatra (3.1.0)
+      mustermann (~> 3.0)
+      rack (~> 2.2, >= 2.2.4)
+      rack-protection (= 3.1.0)
+      tilt (~> 2.0)
     sqlite3 (1.6.4)
       mini_portile2 (~> 2.8.0)
+    tilt (2.3.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
 
@@ -42,7 +57,9 @@ DEPENDENCIES
   eventmachine
   paint
   pry
+  puma
   rake
+  sinatra
   sqlite3
 
 RUBY VERSION

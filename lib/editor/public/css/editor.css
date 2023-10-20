@@ -1,0 +1,74 @@
+.loader {
+  background: #fff;
+  display: none;
+  position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  opacity: 0.5;
+}
+.loader__image {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  height: 64px;
+  width: 64px;
+}
+.area {
+  background-color: #000;
+  font-size: 0;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.area-room {
+  border: 1px solid #333;
+  cursor: pointer;
+  display: inline-block;
+  height: 20px;
+  font-size: 14px;
+  overflow: hidden;
+  text-align: center;
+  width: 20px;
+}
+.area-room--selected {
+  border: 1px solid #fff;
+}
+.area-room--empty {
+  background-color: #333;
+  color: #fff;
+}
+
+.area-room:hover {
+  border: 1px solid #ccc;
+}
+
+.area-room--red {
+  color: #800000;
+}
+.area-room--green {
+  color: #008000;
+}
+.area-room--yellow {
+  color: #808000;
+}
+.area-room--blue {
+  color: #000080;
+}
+.area-room--magenta {
+  color: #800080;
+}
+.area-room--cyan {
+  color: #008080;
+}
+.area-room--white {
+  color: #c0c0c0;
+}
+
+.area-room--bright {
+  font-weight: bold;
+}

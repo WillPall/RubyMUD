@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RubyMUD Editor</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/editor.css">
+
+  <script>
+    var areas = [];
+
+    var roomTypes = [
+      <% RoomType.all.each do |type| %>
+        <%= type.to_json %>,
+      <% end %>
+    ];
+  </script>
+</head>
+<body>
+  <div class="loader">
+    <img class="loader__image" src="/loading.gif">
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 area" data-id="<%= Area.first.id %>"></div>
+      <div class="col-md-4">
+        <div class="room-details">
+          <form action="/rooms" method="post" class="room-details__form">
+            <div class="form-group">
+              <label for="room[id]">Room ID</label>
+              <input type="text" class="form-control" id="room[id]" value="" disabled>
+            </div>
+            <div class="form-group">
+              <label for="room[title]">Title</label>
+              <input type="text" class="form-control" id="room[title]" value="">
+            </div>
+            <div class="form-group">
+              <label for="room[description]">Description</label>
+              <textarea class="form-control" id="room[description]"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="room[room_type_id]">Room Type</label>
+              <select class="form-select room-details__room_type_id" id="room[room_type_id]">
+                <% RoomType.all.each do |type| %>
+                  <option value="<%= type.id %>"><%= type.name %></option>
+                <% end %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Connections</label>
+              <ul class="room-details__connections"></ul>
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Save">
+              <button class="btn btn-danger room-details__delete">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script>
+    // TODO: we don't really need areaIds for most of these, we can get that from the room itself
+
+    var showLoader = function() {
+      $('.loader').show();
+    };
+
+    var hideLoader = function() {
+      $('.loader').hide();
+    };
+
+    var getRoom = function(roomId, areaId) {
+      var area = getArea(areaId);
+
+      for (var i = 0; i < area.rooms.length; i++) {
+        if (area.rooms[i].id == roomId) {
+          return area.rooms[i];
+        }
+      }
+
+      return false;
+    };
+
+    var getArea = function(areaId) {
+      for (var i = 0; i < areas.length; i++) {
+        if (areas[i].id == areaId) {
+          return areas[i];
+        }
+      }
+    };
+
+    var getRoomType = function(id) {
+      for (var i = 0; i < roomTypes.length; i++) {
+        if (roomTypes[i].id == id) {
+          return roomTypes[i];
+        }
+      }
+    };
+
+    var loadArea = function(areaId, callback) {
+      showLoader();
+
+      $.ajax({
+        type: 'get',
+        url: '/area_map/' + areaId,
+        dataType: 'html'
+      }).done(function(data) {
+        $('.area').html(data);
+        $('.area').data('id', areaId);
+
+        $.ajax({
+          type: 'get',
+          url: '/areas',
+          dataType: 'json'
+        }).done(function(data) {
+          areas = data;
+
+          hideLoader();
+
+          if (typeof callback !== undefined) {
+            callback();
+          }
+        });
+      });
+    };
+
+    var populateRoomForm = function(room) {
+      var $roomFormContainer = $('.room-details');
+
+      $roomFormContainer.find('#room\\[id\\]').val(room.id);
+      $roomFormContainer.find('#room\\[title\\]').val(room.title);
+      $roomFormContainer.find('#room\\[title\\]').attr('placeholder', getRoomType(room.room_type_id).default_title);
+      $roomFormContainer.find('#room\\[description\\]').val(room.description);
+      $roomFormContainer.find('#room\\[description\\]').attr('placeholder', getRoomType(room.room_type_id).default_description);
+      $roomFormContainer.find('#room\\[room_type_id\\]').find('[value="' + room.room_type_id + '"]').prop('selected', true);
+
+      $roomFormContainer.find('.room-details__connections').empty();
+      for (var i = 0; i < room.connections.length; i++) {
+        $roomFormContainer.find('.room-details__connections').append('<li><a href="#" class="room-link" data-room-id="' + room.connections[i].destination_id + '">' + room.connections[i].name + ' - ' + room.connections[i].destination_id + '</a></li>');
+      }
+    };
+
+    var selectRoom = function(room, areaRoom) {
+      populateRoomForm(room);
+      $('.area-room.area-room--selected').removeClass('area-room--selected');
+      areaRoom.addClass('area-room--selected');
+    };
+
+    $('body').on('click', '.area-room', function(event) {
+      event.preventDefault();
+
+      var roomId = $(this).data('id');
+      var x = $(this).data('x');
+      var y = $(this).data('y');
+      var room = {
+        id: '',
+        title: '',
+        x: x,
+        y: y,
+        description: '',
+        room_type_id: 1,
+        connections: []
+      };
+
+      if (!$(this).hasClass('area-room--empty')) {
+        room = getRoom(roomId, $('.area').data('id'));
+      }
+
+      selectRoom(room, $(this));
+    });
+
+    $('body').on('click', '.room-link', function(event) {
+      event.preventDefault();
+
+      selectRoom(getRoom($(this).data('room-id'), $('.area').data('id')), $('.area-room[data-id="' + $(this).data('room-id') + '"]'));
+    });
+
+    $('.room-details__room_type_id').on('change', function(event) {
+      var roomType = getRoomType($(this).find(':selected').val());
+
+      $('.room-details__form').find('#room\\[title\\]').attr('placeholder', roomType.default_title);
+      $('.room-details__form').find('#room\\[description\\]').attr('placeholder', roomType.default_description);
+    });
+
+    $('.room-details__form').on('submit', function(event) {
+      event.preventDefault();
+
+      showLoader();
+
+      var $form = $(this);
+      var $areaRoom = $('.area-room.area-room--selected');
+
+      var formData = {
+        id: $form.find('#room\\[id\\]').val(),
+        title: $form.find('#room\\[title\\]').val(),
+        description: $form.find('#room\\[description\\]').val(),
+        room_type_id: $form.find('#room\\[room_type_id\\]').val(),
+        x: $areaRoom.data('x'),
+        y: $areaRoom.data('y'),
+        area_id: $('.area').data('id'),
+      };
+
+      $.ajax({
+        type: $form.attr('method'),
+        url: $form.attr('action'),
+        data: formData,
+        dataType: 'json',
+      }).done(function(data) {
+        var room = getRoom(data.id, data.area_id);
+        if (!room) {
+          getArea(data.area_id).rooms.push(data);
+          room = getRoom(data.id, data.area_id);
+        }
+
+        room.title = data.title;
+        room.description = data.description;
+        room.room_type_id = data.room_type_id;
+
+        loadArea(room.area_id, function() {
+          selectRoom(room, $('.area-room[data-id="' + room.id + '"]'));
+          hideLoader();
+        });
+      });
+    });
+
+    $('.room-details__form').on('click', '.room-details__delete', function(event) {
+      event.preventDefault();
+
+      showLoader();
+
+      var $form = $(event.target).closest('.room-details__form');
+      var room = getRoom($form.find('#room\\[id\\]').val(), 1);
+
+      if (window.confirm('Are you sure you want to delete Room #' + room.id)) {
+        $.ajax({
+          type: 'DELETE',
+          url: '/room/' + room.id,
+          dataType: 'json'
+        }).done(function(data) {
+          console.log('done');
+          var $areaRoom = $('.area-room[data-id="' + room.id + '"]');
+          console.log($areaRoom);
+
+          $areaRoom.removeClass();
+          $areaRoom.addClass('area-room area-room--empty');
+          $areaRoom.data('id', '');
+          $areaRoom.text('');
+
+          hideLoader();
+        });
+      }
+    });
+
+    $(function() {
+      loadArea($('.area').data('id'));
+    });
+  </script>
+</body>
+</html>

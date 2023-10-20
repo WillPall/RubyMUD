@@ -10,6 +10,10 @@ gem 'bcrypt'
 gem 'pry'
 gem 'rake'
 
+# for editor
+gem 'sinatra', require: false
+gem 'puma', require: false
+
 gem 'sqlite3'
 # If using Postgres, comment out the above line and uncomment this one
 # gem 'pg'

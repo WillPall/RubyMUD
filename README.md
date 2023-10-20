@@ -37,15 +37,36 @@ See `config/database.yml` for defaults or to set different options.
 * `db:reset` - drops and then sets up the DB
 * `g:migration [file name]` - creates a blank ActiveRecord migration with the given filename in the `db/migrate` directory
 
+## World Editor
+
+RubyMUD comes with a browser-based world editor. This editor uses Sinatra and is available at http://localhost:4567/.
+
+### Running the Editor
+
+1. Perform the Getting Started steps above and run `ruby_mud.rb` once to import the initial world image
+1. Run `editor.rb`
+1. Visit http://localhost:4567/ in your browser to view and edit the world
+
+### Features
+
+* View the main "overworld" area
+* Add, edit, and delete rooms in the overworld
+
+### Missing Features
+
+* Support for multiple areas
+* Support for adding room connections other than N/S/E/W
+* Support for item and mob management
+
 ## TODO (i.e. very next on the list)
 
-1. Basic inventory and ability to manage equiptment
+1. Ability to manage equiptment
 1. Something to fight! What's the point of an RPG with nothing to do?
+1. Combat
 1. NPCs
 1. Places for NPCs to show up (cities, towns, roads, etc.)
-1. Procedural generation for the world itself
+1. Procedural generation for the world itself (stretch goal)
 1. Procedural generation for general world text for biomes (stretch goal)
-1. World editor (either in-game or with a utility application)
 
 ## License
 
