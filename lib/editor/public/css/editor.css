@@ -19,13 +19,13 @@
   width: 64px;
 }
 .area {
-  background-color: #000;
   font-size: 0;
   overflow: auto;
   white-space: nowrap;
 }
 
 .area-room {
+  background-color: #000;
   border: 1px solid #333;
   cursor: pointer;
   display: inline-block;
