@@ -39,13 +39,13 @@ See `config/database.yml` for defaults or to set different options.
 
 ## World Editor
 
-RubyMUD comes with a browser-based world editor. This editor uses Sinatra and is available at http://localhost:4567/.
+RubyMUD comes with a browser-based world editor. This editor uses Sinatra and is available at http://localhost:34911/.
 
 ### Running the Editor
 
 1. Perform the Getting Started steps above and run `ruby_mud.rb` once to import the initial world image
 1. Run `editor.rb`
-1. Visit http://localhost:4567/ in your browser to view and edit the world
+1. Visit http://localhost:34911/ in your browser to view and edit the world
 
 ### Features
 

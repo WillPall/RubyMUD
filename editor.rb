@@ -13,6 +13,8 @@ RubyMUD.game.load_world
 
 set :views, settings.root + '/lib/editor/views'
 set :public_folder, settings.root + '/lib/editor/public'
+set :bind, '0.0.0.0'
+set :port, 34911
 
 get '/' do
   @items = Items::Item.all
