@@ -16,7 +16,6 @@ EventMachine.run do
   RubyMUD.game.prepare_game_state
   RubyMUD.game.load_world
 
-  # TODO: Figure out how to get this working on external servers. may just be local testing issues
   EventMachine.start_server(RubyMUD.config[:hostname], RubyMUD.config[:port], Connection)
   EventMachine.add_periodic_timer(Game::TICK_INTERVAL) do
     RubyMUD.game.tick
