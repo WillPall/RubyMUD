@@ -38,7 +38,7 @@ class Command::Goto < Command
 
     client.user.room = destination
     client.user.save
-    client.send_line(client.user.room.render)
+    client.send_line(client.user.room.render_for(client.user))
   end
 
   private

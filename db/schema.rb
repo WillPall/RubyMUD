@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 202310191712) do
+ActiveRecord::Schema[7.0].define(version: 202310222215) do
   create_table "areas", force: :cascade do |t|
     t.integer "starting_room_id"
     t.datetime "created_at", null: false
@@ -25,6 +25,20 @@ ActiveRecord::Schema[7.0].define(version: 202310191712) do
     t.integer "value"
     t.integer "holdable_id"
     t.string "holdable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "non_player_characters", force: :cascade do |t|
+    t.string "name"
+    t.integer "room_id"
+    t.integer "max_health"
+    t.integer "max_mana"
+    t.integer "max_stamina"
+    t.integer "current_health"
+    t.integer "current_mana"
+    t.integer "current_stamina"
+    t.integer "default_disposition"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -74,6 +88,8 @@ ActiveRecord::Schema[7.0].define(version: 202310191712) do
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "online"
     t.boolean "superuser", default: false
+    t.integer "max_stamina"
+    t.integer "current_stamina"
   end
 
 end

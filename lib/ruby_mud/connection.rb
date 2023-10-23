@@ -196,7 +196,7 @@ class Connection < EM::Connection
 
     # send the welcome message and let the player know where they are
     send_line('Welcome to RubyMUD!')
-    send_line(self.user.room.render)
+    send_line(self.user.room.render_for(user))
 
     RubyMUD.send_to_clients(MessageHelper.info_message("#{self.user.name} has joined the game"), ConnectionHelper.other_peers(self))
     puts "#{Paint[self.user.name, :green]} has joined"

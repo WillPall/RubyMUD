@@ -3,8 +3,10 @@ admin_user = User.new(
   name: 'admin',
   max_health: '1000000',
   max_mana: '1000000',
+  max_stamina: '1000000',
   current_health: '1000000',
   current_mana: '1000000',
+  current_stamina: '1000000',
   superuser: true
 )
 
@@ -61,23 +63,4 @@ RoomType.create(
   map_color: 'yellow',
   map_is_bright: false,
   image_color: '#aaaa00'
-)
-
-Items::Weapon.create(
-  name: 'The best weapon',
-  description: 'This is the best weapon ever',
-  weight: 5,
-  value: 5 
-)
-Items::Item.create(
-  name: 'Blue Torch',
-  description: 'This is a blue torch',
-  weight: 5,
-  value: 5 
-)
-Items::Item.create(
-  name: 'Red Torch',
-  description: 'This is a blue torch',
-  weight: 5,
-  value: 5 
 )

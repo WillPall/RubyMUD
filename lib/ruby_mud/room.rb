@@ -2,6 +2,7 @@ class Room < ActiveRecord::Base
   include Holdable, StateUpdateable
 
   has_many :users
+  has_many :non_player_characters
   has_many :connections
   has_many :destinations, through: :connections
   belongs_to :area
@@ -10,6 +11,10 @@ class Room < ActiveRecord::Base
   after_create :create_connections, :adjust_coordinates
 
   def render
+    render_for(nil)
+  end
+
+  def render_for(user)
     output = map_view
     output += "\n" + Paint[self.display_title, :yellow] + "\n"
     output += self.display_description + "\n"
@@ -22,12 +27,21 @@ class Room < ActiveRecord::Base
       end
     end
 
-    if self.connections.present?
-      output += 'Exits: '
+    if connections.present?
+      output += 'Exits: ' + connections.map { |c| "#{Paint[c.name, :green]}" }.join(', ') + "\n"
+    end
 
-      self.connections.each do |connection|
-        output += "#{Paint[connection.name, :green]} "
-      end
+    non_player_characters.each do |npc|
+      output += "#{npc.name} is here.\n"
+    end
+
+    users_to_show = online_users
+    if user.present?
+      users_to_show = online_users.where.not(id: user.id)
+    end
+
+    users_to_show.each do |u|
+      output += "(Player) #{u.name} is here.\n"
     end
 
     output

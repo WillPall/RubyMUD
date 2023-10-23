@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  include Holdable, StateUpdateable
+  include Holdable, StateUpdateable, Statable
 
   # TODO: Make this a before_create, and make sure existing users have an
   # actual set of stats
@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
     self.room = room.connections.where(name: destination).first.destination
     save
 
-    connection.send_line(room.render)
+    connection.send_line(room.render_for(self))
 
     # tell everyone we've arrived
     RubyMUD.send_to_users("#{Paint[name, :green]} entered the area", room_users)
@@ -54,8 +54,10 @@ class User < ActiveRecord::Base
   def initialize_base_stats
     self.max_health = 10
     self.max_mana = 10
+    self.max_stamina = 10
 
     self.current_health = 10
     self.current_mana = 10
+    self.current_stamina = 10
   end
 end

@@ -1,6 +1,6 @@
 class Command::Look < Command
   def execute(client, arguments)
-    client.send_line(client.user.room.render)
+    client.send_line(client.user.room.render_for(client.user))
   end
 
   private
