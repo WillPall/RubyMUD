@@ -87,12 +87,17 @@ class Connection < EM::Connection
     #
     # skip responding if it's the client sending us a protocol response code
     if is_protocol_response?(@current_response)
+      # Some clients send this as two different responses (like the spec) and some don't (like telnet itself)
+      # e.g. 255,251,31 then 255,250,31,width,height,255,240 vs. 255,251,31,255,250,31,width,height,255,240
+      #
+      # If it's a WILL NAWS with extra info, chop that off and continue
       # WILL NAWS response to DO NAWS
-      if @current_response[1] == IAC_ACTION::WILL && @current_response[2] == IAC_COMMAND::NAWS
-        @terminal_width = @current_response[6,2].unpack('n')[0]
-        @terminal_height = @current_response[8,2].unpack('n')[0]
+      if @current_response[1] == IAC_ACTION::WILL && @current_response[2] == IAC_COMMAND::NAWS && @current_response.length > 3
+        @current_response = @current_response[3..-1]
+      end
+
       # SB NAWS response to client window change
-      elsif @current_response[1] == IAC_ACTION::SB && @current_response[2] == IAC_COMMAND::NAWS
+      if @current_response[1] == IAC_ACTION::SB && @current_response[2] == IAC_COMMAND::NAWS
         @terminal_width = @current_response[3,2].unpack('n')[0]
         @terminal_height = @current_response[5,2].unpack('n')[0]
       end
