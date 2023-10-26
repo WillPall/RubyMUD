@@ -5,13 +5,15 @@ require 'active_record'
 
 Bundler.require(:default)
 
-# TODO: we have to load the main classes/modules first before loading the rest
-# there's got to be a better way to do this
-# TODO: make sure this syntax and usage is the best (e.g. why use join instead of expand_path?)
-Dir[File.join(__dir__, '../lib', '*.rb')].each { |file| require file }
-Dir[File.join(__dir__, '../lib', 'ruby_mud/concerns/*.rb')].each { |file| require file }
-Dir[File.join(__dir__, '../lib', 'ruby_mud/*.rb')].each { |file| require file }
-Dir[File.join(__dir__, '../lib', '**/*.rb')].each { |file| require file }
+# Load all classes/modules automatically based on naming convention. We load concerns, helpers, and util explicity
+loader = Zeitwerk::Loader.new
+loader.push_dir('lib/ruby_mud/concerns')
+loader.push_dir('lib/ruby_mud/helpers')
+loader.push_dir('lib/ruby_mud/util')
+loader.push_dir('lib/ruby_mud')
+loader.setup
+# Certain things rely on classes being required (like registering possible commands), so eager load everything
+loader.eager_load
 
 module RubyMUD
   class << self

@@ -1,15 +1,15 @@
-class Command::Inventory < Command
+class Commands::Inventory < Commands::Command
   def execute(client, arguments)
     client.send_line(Paint['Equipped', :green])
     client.send_line("\tNone")
     client.send_line(Paint['Backpack', :green])
 
-    if client.user.items.blank?
+    if client.user.item_instances.blank?
       client.send_line("\tNone")
     end
 
-    client.user.items.sort_by(&:name).each do |i|
-      client.send_line("\t#{i.name}")
+    client.user.item_instances.sort_by { |i| i.item.name }.each do |instance|
+      client.send_line("\t#{instance.item.name}")
     end
   end
 

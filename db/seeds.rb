@@ -64,3 +64,53 @@ RoomType.create(
   map_is_bright: false,
   image_color: '#aaaa00'
 )
+
+Items::Weapon.create(
+  name: 'The best weapon',
+  description: 'This is the best weapon ever',
+  weight: 5,
+  value: 5 
+)
+Items::Item.create(
+  name: 'Blue Torch',
+  description: 'This is a blue torch',
+  weight: 5,
+  value: 5 
+)
+Items::Item.create(
+  name: 'Red Torch',
+  description: 'This is a blue torch',
+  weight: 5,
+  value: 5 
+)
+
+NonPlayerCharacter.create(
+  name: 'Shopkeeper',
+  max_health: '1000',
+  max_mana: '1000',
+  max_stamina: '1000',
+  current_health: '1000',
+  current_mana: '1000',
+  current_stamina: '1000',
+  default_disposition: 0
+)
+NonPlayerCharacter.create(
+  name: 'Rat',
+  max_health: '5',
+  max_mana: '5',
+  max_stamina: '5',
+  current_health: '5',
+  current_mana: '5',
+  current_stamina: '5',
+  default_disposition: -1000
+)
+NonPlayerCharacter.create(
+  name: 'Bandit',
+  max_health: '50',
+  max_mana: '50',
+  max_stamina: '50',
+  current_health: '50',
+  current_mana: '50',
+  current_stamina: '50',
+  default_disposition: -1000
+)

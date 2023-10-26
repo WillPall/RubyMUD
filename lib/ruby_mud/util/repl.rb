@@ -1,6 +1,6 @@
 # Rudimentary REPL implementation. Supports navigating history of commands with the up/down arrow keys and editing in
 # place. Prints objects that respond to `inspect`, or string representation of result value of commands.
-class REPL
+class Repl
   def initialize(prompt: 'repl> ')
     require 'io/console'
 

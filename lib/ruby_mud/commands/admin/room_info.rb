@@ -1,4 +1,4 @@
-class Command::RoomInfo < Command
+class Commands::Admin::RoomInfo < Commands::Command
   def execute(client, arguments)
     room = client.user.room
 

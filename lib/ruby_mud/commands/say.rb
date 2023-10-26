@@ -1,4 +1,4 @@
-class Command::Say < Command
+class Commands::Say < Commands::Command
   def execute(client, arguments)
     RubyMUD.send_to_users("#{Paint["#{client.user.name} says:", :green]} #{arguments.strip}", client.user.room_users)
     client.send_line("#{Paint['you say:', :yellow]} #{arguments.strip}")

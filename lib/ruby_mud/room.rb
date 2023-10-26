@@ -19,11 +19,11 @@ class Room < ActiveRecord::Base
     output += "\n" + Paint[self.display_title, :yellow] + "\n"
     output += self.display_description + "\n"
 
-    if items.present?
+    if item_instances.present?
       output += 'Items: '
 
-      items.each do |item|
-        output += "\t#{item.name}\n"
+      item_instances.each do |i|
+        output += "\t#{i.item.name}\n"
       end
     end
 

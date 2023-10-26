@@ -1,4 +1,4 @@
-class Command::Help < Command
+class Commands::Help < Commands::Command
   def execute(client, arguments)
     client.send_line('Available commands:')
     CommandHandler.available_commands(client.user).each do |k, command|

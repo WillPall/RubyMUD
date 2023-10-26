@@ -1,4 +1,4 @@
-class Command::Yell < Command
+class Commands::Yell < Commands::Command
   def execute(client, arguments)
     RubyMUD.send_to_clients("#{Paint["#{client.user.name} yells:", :magenta]} #{arguments.strip}", ConnectionHelper.other_peers(client))
     client.send_line("#{Paint['you yell:', :yellow]} #{arguments.strip}")

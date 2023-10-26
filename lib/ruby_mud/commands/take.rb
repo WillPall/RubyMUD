@@ -1,4 +1,4 @@
-class Command::Take < Command
+class Commands::Take < Commands::Command
   def execute(client, arguments)
     if arguments.blank?
       client.send_line("Please specify what you'd like to take.")
@@ -15,27 +15,27 @@ class Command::Take < Command
     possible_items = []
 
     if item_request == 'all'
-      client.user.items << client.user.room.items
+      client.user.item_instances << client.user.room.item_instances
       client.user.save
-      client.user.room.items.reload
+      client.user.room.item_instances.reload
 
       client.send_line('Took all items.')
       return
     end
 
-    client.user.room.items.each do |i|
-      name = i.name.downcase
+    client.user.room.item_instances.each do |i|
+      name = i.item.name.downcase
 
       if name == item_request
         # TODO: could clean up the "take" response and saving, since it's duplicated below
-        client.user.items << i
+        client.user.item_instances << i
         client.user.save
         # TODO/KLUDGE: we have to call reload here, because for this client (or maybe the whole server?) this room's
         # items were modified in the DB, but not on the object itself. couldn't find a global setting for this with
         # respect to associations. QueryCache is a thing, but not for this (and that's disabled by default)
-        client.user.room.items.reload
+        client.user.room.item_instances.reload
 
-        client.send_line("Took #{i.name}")
+        client.send_line("Took #{i.item.name}")
         return
       elsif name.include?(item_request)
         possible_items << i
@@ -44,17 +44,17 @@ class Command::Take < Command
 
     if possible_items.blank?
       client.send_line("No \"#{arguments}\" here to take.")
-    elsif possible_items.count > 1 && possible_items.map(&:name).uniq.count > 1
+    elsif possible_items.count > 1 && possible_items.map { |i| i.item.name }.uniq.count > 1
       client.send_line("Multiple \"#{arguments}\" here to take. Be more specific.")
     else
-      client.user.items << possible_items.first
+      client.user.item_instances << possible_items.first
       client.user.save
       # TODO/KLUDGE: we have to call reload here, because for this client (or maybe the whole server?) this room's
       # items were modified in the DB, but not on the object itself. couldn't find a global setting for this with
       # respect to associations. QueryCache is a thing, but not for this (and that's disabled by default)
-      client.user.room.items.reload
+      client.user.room.item_instances.reload
 
-      client.send_line("Took #{possible_items.first.name}")
+      client.send_line("Took #{possible_items.first.item.name}")
     end
   end
 

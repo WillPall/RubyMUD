@@ -51,7 +51,7 @@ class Game
 
   # Instantiates and registers all commands that are subclasses of `Command`
   def initialize_commands
-    Command.descendants.each do |command|
+    Commands::Command.descendants.each do |command|
       CommandHandler.register_command(command.new)
     end
   end

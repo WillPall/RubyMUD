@@ -27,7 +27,7 @@ class ServerCommandHandler < EM::Connection
     when 'console'
       puts Paint["**EXPERIMENTAL FEATURE**\nNOTE: This is a blocking console and will not allow the server to respond to clients until exited with `exit` or `quit`", :yellow, :bright]
 
-      repl = REPL.new
+      repl = Repl.new
       repl.start
     end
   end

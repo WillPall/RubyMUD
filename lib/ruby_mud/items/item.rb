@@ -1,3 +1,10 @@
 class Items::Item < ActiveRecord::Base
-  belongs_to :holdable, polymorphic: true
+  has_many :item_instances
+
+  def create_instance
+    Items::ItemInstance.create(
+      item: self
+    )
+    self.item_instances.reload
+  end
 end

@@ -1,4 +1,4 @@
-class Command::Goto < Command
+class Commands::Admin::Goto < Commands::Command
   def execute(client, arguments)
     subject, arguments = arguments.split(' ', 2)
     destination = nil

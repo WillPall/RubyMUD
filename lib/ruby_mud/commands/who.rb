@@ -1,4 +1,4 @@
-class Command::Who < Command
+class Commands::Who < Commands::Command
   def execute(client, arguments)
     other_online_users = User.where(online: true).where.not(id: client.user.id).order(:name)
 

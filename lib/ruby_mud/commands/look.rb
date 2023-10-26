@@ -1,4 +1,4 @@
-class Command::Look < Command
+class Commands::Look < Commands::Command
   def execute(client, arguments)
     client.send_line(client.user.room.render_for(client.user))
   end

@@ -31,61 +31,22 @@ class Area::ImageLoader
           area.starting_room = new_room
 
           # TODO: these are for testing and should come from the editor/game instead
-          weapon = Items::Weapon.create(
-            name: 'The best weapon',
-            description: 'This is the best weapon ever',
-            weight: 5,
-            value: 5 
-          )
-          Items::Item.create(
-            name: 'Blue Torch',
-            description: 'This is a blue torch',
-            weight: 5,
-            value: 5 
-          )
-          Items::Item.create(
-            name: 'Red Torch',
-            description: 'This is a blue torch',
-            weight: 5,
-            value: 5 
-          )
-          new_room.items << Items::Item.all
+          Items::Item.all.each do |item|
+            new_room.item_instances << item.create_instance
+          end
           new_room.save
           
-          NonPlayerCharacter.create(
-            name: 'Shopkeeper',
-            max_health: '1000',
-            max_mana: '1000',
-            max_stamina: '1000',
-            current_health: '1000',
-            current_mana: '1000',
-            current_stamina: '1000',
-            default_disposition: 0,
-            room: new_room
-          )
-          NonPlayerCharacter.create(
-            name: 'Rat',
-            max_health: '5',
-            max_mana: '5',
-            max_stamina: '5',
-            current_health: '5',
-            current_mana: '5',
-            current_stamina: '5',
-            default_disposition: -1000,
-            room_id: new_room.connections.where(name: 'north').first.destination_id
-          )
-          bandit = NonPlayerCharacter.create(
-            name: 'Bandit',
-            max_health: '50',
-            max_mana: '50',
-            max_stamina: '50',
-            current_health: '50',
-            current_mana: '50',
-            current_stamina: '50',
-            default_disposition: -1000,
-            room_id: new_room.connections.where(name: 'north').first.destination.connections.where(name: 'north').first.destination_id
-          )
-          bandit.items << weapon.dup
+          shopkeeper = NonPlayerCharacter.where(name: 'Shopkeeper').first
+          shopkeeper.room = new_room
+          shopkeeper.save
+
+          rat = NonPlayerCharacter.where(name: 'Rat').first
+          rat.room = new_room.connections.where(name: 'north').first.destination
+          rat.save
+
+          bandit = NonPlayerCharacter.where(name: 'Bandit').first
+          bandit.room = new_room.connections.where(name: 'north').first.destination.connections.where(name: 'north').first.destination
+          bandit.item_instances << Items::Weapon.first.create_instance
           bandit.save
         end
       end

@@ -9,6 +9,7 @@ gem 'bcrypt'
 # command line and development tools
 gem 'pry'
 gem 'rake'
+gem 'zeitwerk'
 
 # for editor
 gem 'sinatra', require: false

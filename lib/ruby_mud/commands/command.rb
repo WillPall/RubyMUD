@@ -1,7 +1,7 @@
 # This is the base class for all commands. Each command should call `super`
 # during initialization to set up the defaults. That should probably be moved
 # out into a factory (or look into other ways to make it automatic)
-class Command
+class Commands::Command
   attr_accessor :name
   attr_accessor :description
   # TODO: originally I wrote this as `is_visible?` to denote that it wasn't supposed to show up in any lists

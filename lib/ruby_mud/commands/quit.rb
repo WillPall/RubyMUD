@@ -1,4 +1,4 @@
-class Command::Quit < Command
+class Commands::Quit < Commands::Command
   def execute(client, arguments)
     client.user.save
     client.close_connection
