@@ -12,7 +12,6 @@ class Commands::Drop < Commands::Command
     #
     # "all" will drop all items in the inventory
     item_request = arguments.downcase
-    possible_items = []
 
     if item_request == 'all'
       client.user.room.item_instances << client.user.item_instances
@@ -23,38 +22,21 @@ class Commands::Drop < Commands::Command
       return
     end
 
-    client.user.item_instances.each do |i|
-      name = i.item.name.downcase
+    possible_item_instances = Items.match(item_request, client.user.item_instances)
 
-      if name == item_request
-        # TODO: could clean up the "take" response and saving, since it's duplicated below
-        client.user.room.item_instances << i
-        client.user.room.save
-        # TODO/KLUDGE: we have to call reload here, because for this client (or maybe the whole server?) this room's
-        # items were modified in the DB, but not on the object itself. couldn't find a global setting for this with
-        # respect to associations. QueryCache is a thing, but not for this (and that's disabled by default)
-        client.user.item_instances.reload
-
-        client.send_line("Dropped #{i.item.name}")
-        return
-      elsif name.include?(item_request)
-        possible_items << i
-      end
-    end
-
-    if possible_items.blank?
+    if possible_item_instances.blank?
       client.send_line("No \"#{arguments}\" in your inventory.")
-    elsif possible_items.count > 1 && possible_items.map { |i| i.item.name }.uniq.count > 1
+    elsif possible_item_instances.count > 1 && possible_item_instances.map { |i| i.item.name }.uniq.count > 1
       client.send_line("Multiple \"#{arguments}\" in your inventory. Be more specific.")
     else
-      client.user.room.item_instances << possible_items.first
+      client.user.room.item_instances << possible_item_instances.first
       client.user.room.save
       # TODO/KLUDGE: we have to call reload here, because for this client (or maybe the whole server?) this room's
       # items were modified in the DB, but not on the object itself. couldn't find a global setting for this with
       # respect to associations. QueryCache is a thing, but not for this (and that's disabled by default)
       client.user.item_instances.reload
 
-      client.send_line("Dropped #{possible_items.first.item.name}")
+      client.send_line("Dropped #{possible_item_instances.first.item.name}")
     end
   end
 
