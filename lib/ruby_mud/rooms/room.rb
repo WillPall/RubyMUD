@@ -1,4 +1,4 @@
-class Room < ActiveRecord::Base
+class Rooms::Room < ActiveRecord::Base
   include Holdable, StateUpdateable
 
   has_many :users
@@ -6,7 +6,7 @@ class Room < ActiveRecord::Base
   has_many :connections
   has_many :destinations, through: :connections
   belongs_to :area
-  belongs_to :room_type
+  belongs_to :type
 
   after_create :create_connections, :adjust_coordinates
 
@@ -48,11 +48,11 @@ class Room < ActiveRecord::Base
   end
 
   def display_title
-    self.title || self.room_type.default_title
+    self.title || self.type.default_title
   end
 
   def display_description
-    self.description || self.room_type.default_description
+    self.description || self.type.default_description
   end
 
   def online_users
@@ -60,7 +60,7 @@ class Room < ActiveRecord::Base
   end
 
   def map_representation
-    Paint[self.room_type.map_character, self.room_type.map_color.to_sym, (self.room_type.map_is_bright? ? :bright : nil)]
+    Paint[self.type.map_character, self.type.map_color.to_sym, (self.type.map_is_bright? ? :bright : nil)]
   end
 
   protected
@@ -83,26 +83,26 @@ class Room < ActiveRecord::Base
   private
 
   def create_connections
-    north = Room.where(area: self.area, x: self.x, y: self.y - 1).first
-    south = Room.where(area: self.area, x: self.x, y: self.y + 1).first
-    east = Room.where(area: self.area, x: self.x + 1, y: self.y).first
-    west = Room.where(area: self.area, x: self.x - 1, y: self.y).first
+    north = Rooms::Room.where(area: self.area, x: self.x, y: self.y - 1).first
+    south = Rooms::Room.where(area: self.area, x: self.x, y: self.y + 1).first
+    east = Rooms::Room.where(area: self.area, x: self.x + 1, y: self.y).first
+    west = Rooms::Room.where(area: self.area, x: self.x - 1, y: self.y).first
 
     if north.present?
-      self.connections << Room::Connection.create(room: self, destination: north, name: 'north')
-      north.connections << Room::Connection.create(room: north, destination: self, name: 'south')
+      self.connections << Rooms::Connection.create(room: self, destination: north, name: 'north')
+      north.connections << Rooms::Connection.create(room: north, destination: self, name: 'south')
     end
     if south.present?
-      self.connections << Room::Connection.create(room: self, destination: south, name: 'south')
-      south.connections << Room::Connection.create(room: south, destination: self, name: 'north')
+      self.connections << Rooms::Connection.create(room: self, destination: south, name: 'south')
+      south.connections << Rooms::Connection.create(room: south, destination: self, name: 'north')
     end
     if east.present?
-      self.connections << Room::Connection.create(room: self, destination: east, name: 'east')
-      east.connections << Room::Connection.create(room: east, destination: self, name: 'west')
+      self.connections << Rooms::Connection.create(room: self, destination: east, name: 'east')
+      east.connections << Rooms::Connection.create(room: east, destination: self, name: 'west')
     end
     if west.present?
-      self.connections << Room::Connection.create(room: self, destination: west, name: 'west')
-      west.connections << Room::Connection.create(room: west, destination: self, name: 'east')
+      self.connections << Rooms::Connection.create(room: self, destination: west, name: 'west')
+      west.connections << Rooms::Connection.create(room: west, destination: self, name: 'east')
     end
   end
 
@@ -118,7 +118,7 @@ class Room < ActiveRecord::Base
     end
 
     if x_difference > 0 || y_difference > 0
-      Room.where(area: self.area).each do |room|
+      Rooms::Room.where(area: self.area).each do |room|
         room.x += x_difference
         room.y += y_difference
         room.save

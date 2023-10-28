@@ -11,15 +11,15 @@ class Area::ImageLoader
       room_rows << room_row
 
       world_image.width.times do |i|
-        room_type = RoomType.where(image_color: ChunkyPNG::Color.to_hex(world_image[i, j], false)).first
+        room_type = Rooms::Type.where(image_color: ChunkyPNG::Color.to_hex(world_image[i, j], false)).first
 
         if room_type.blank?
           room_row << nil
           next
         end
 
-        new_room = Room.create(
-          room_type: room_type,
+        new_room = Rooms::Room.create(
+          type: room_type,
           area: area,
           x: i,
           y: j

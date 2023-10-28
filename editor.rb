@@ -34,7 +34,7 @@ get '/area_map/:id' do
     
     row.each_with_index do |col, x|
       if col.present?
-        map_html += "<div class=\"area-room area-room--#{col.room_type.map_color} #{col.room_type.map_is_bright? ? 'area-room--bright' : ''}\" data-id=\"#{col.id}\" data-x=\"#{col.x}\" data-y=\"#{col.y}\">#{col.room_type.map_character}</div>"
+        map_html += "<div class=\"area-room area-room--#{col.type.map_color} #{col.type.map_is_bright? ? 'area-room--bright' : ''}\" data-id=\"#{col.id}\" data-x=\"#{col.x}\" data-y=\"#{col.y}\">#{col.type.map_character}</div>"
       else
         map_html += "<div class=\"area-room area-room--empty\" data-x=\"#{x - 6}\" data-y=\"#{y - 6}\"></div>"
       end
@@ -50,11 +50,10 @@ post '/rooms' do
   room = nil
 
   if params[:id].present?
-    room = Room.find(params[:id])
+    room = Rooms::Room.find(params[:id])
     room.update(params)
   else
-    room_type = RoomType.find(params[:room_type_id])
-    room = Room.new(params.except(:id))
+    room = Rooms::Room.new(params.except(:id))
     room.save
   end
 
@@ -62,8 +61,8 @@ post '/rooms' do
 end
 
 delete '/room/:id' do
-  room = Room.find(params[:id])
-  connections = Room::Connection.where(destination_id: room.id)
+  room = Rooms::Room.find(params[:id])
+  connections = Rooms::Connection.where(destination_id: room.id)
 
   connections.destroy_all
   room.destroy

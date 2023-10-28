@@ -12,7 +12,7 @@
     var areas = [];
 
     var roomTypes = [
-      <% RoomType.all.each do |type| %>
+      <% Rooms::Type.all.each do |type| %>
         <%= type.to_json %>,
       <% end %>
     ];
@@ -41,9 +41,9 @@
               <textarea class="form-control" id="room[description]"></textarea>
             </div>
             <div class="form-group">
-              <label for="room[room_type_id]">Room Type</label>
-              <select class="form-select room-details__room_type_id" id="room[room_type_id]">
-                <% RoomType.all.each do |type| %>
+              <label for="room[type_id]">Room Type</label>
+              <select class="form-select room-details__type_id" id="room[type_id]">
+                <% Rooms::Type.all.each do |type| %>
                   <option value="<%= type.id %>"><%= type.name %></option>
                 <% end %>
               </select>
@@ -135,10 +135,10 @@
 
       $roomFormContainer.find('#room\\[id\\]').val(room.id);
       $roomFormContainer.find('#room\\[title\\]').val(room.title);
-      $roomFormContainer.find('#room\\[title\\]').attr('placeholder', getRoomType(room.room_type_id).default_title);
+      $roomFormContainer.find('#room\\[title\\]').attr('placeholder', getRoomType(room.type_id).default_title);
       $roomFormContainer.find('#room\\[description\\]').val(room.description);
-      $roomFormContainer.find('#room\\[description\\]').attr('placeholder', getRoomType(room.room_type_id).default_description);
-      $roomFormContainer.find('#room\\[room_type_id\\]').find('[value="' + room.room_type_id + '"]').prop('selected', true);
+      $roomFormContainer.find('#room\\[description\\]').attr('placeholder', getRoomType(room.type_id).default_description);
+      $roomFormContainer.find('#room\\[type_id\\]').find('[value="' + room.type_id + '"]').prop('selected', true);
 
       $roomFormContainer.find('.room-details__connections').empty();
       for (var i = 0; i < room.connections.length; i++) {
@@ -164,7 +164,7 @@
         x: x,
         y: y,
         description: '',
-        room_type_id: 1,
+        type_id: 1,
         connections: []
       };
 
@@ -181,7 +181,7 @@
       selectRoom(getRoom($(this).data('room-id'), $('.area').data('id')), $('.area-room[data-id="' + $(this).data('room-id') + '"]'));
     });
 
-    $('.room-details__room_type_id').on('change', function(event) {
+    $('.room-details__type_id').on('change', function(event) {
       var roomType = getRoomType($(this).find(':selected').val());
 
       $('.room-details__form').find('#room\\[title\\]').attr('placeholder', roomType.default_title);
@@ -200,7 +200,7 @@
         id: $form.find('#room\\[id\\]').val(),
         title: $form.find('#room\\[title\\]').val(),
         description: $form.find('#room\\[description\\]').val(),
-        room_type_id: $form.find('#room\\[room_type_id\\]').val(),
+        type_id: $form.find('#room\\[type_id\\]').val(),
         x: $areaRoom.data('x'),
         y: $areaRoom.data('y'),
         area_id: $('.area').data('id'),
@@ -220,7 +220,7 @@
 
         room.title = data.title;
         room.description = data.description;
-        room.room_type_id = data.room_type_id;
+        room.type_id = data.type_id;
 
         loadArea(room.area_id, function() {
           selectRoom(room, $('.area-room[data-id="' + room.id + '"]'));

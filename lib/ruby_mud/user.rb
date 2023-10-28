@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   # TODO: Make this a before_create, and make sure existing users have an
   # actual set of stats
   after_initialize :initialize_base_stats
-  belongs_to :room
+  belongs_to :room, class_name: 'Rooms::Room'
 
   attr_accessor :connection
 

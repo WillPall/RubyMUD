@@ -1,14 +1,14 @@
 # A collection of rooms
 class Area < ActiveRecord::Base
-  has_many :rooms
-  belongs_to :starting_room, class_name: 'Room'
+  has_many :rooms, class_name: 'Rooms::Room'
+  belongs_to :starting_room, class_name: 'Rooms::Room'
 
   # Return a two-dimensional array of all the rooms in this area. Will be `nil` for any room that doesn't exist in that
   # x/y position.
   def map(horizontal_radius: 10000, vertical_radius: 10000, starting_room: nil, padding: 0)
     # TODO: grabbing a random room to just start the breadth-fill from. could definitely make this smarter
     if starting_room.blank?
-      starting_room = Room.find(self.rooms.pluck(:id).sample)
+      starting_room = Rooms::Room.find(self.rooms.pluck(:id).sample)
     end
     map = [[]]
     min_x = self.rooms.where('x >= ?', starting_room.x - horizontal_radius).minimum(:x)

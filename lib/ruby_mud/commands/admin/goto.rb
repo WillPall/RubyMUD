@@ -13,7 +13,7 @@ class Commands::Admin::Goto < Commands::Command
     case subject
     when :room
       begin
-        destination = Room.find(arguments)
+        destination = Rooms::Room.find(arguments)
       rescue
         client.send_line("No room found with ID \"#{arguments}\"")
         return

@@ -4,7 +4,7 @@ class Commands::Admin::RoomInfo < Commands::Command
 
     if arguments.present?
       begin
-        room = Room.find(arguments)
+        room = Rooms::Room.find(arguments)
       rescue
         client.send_line("No room with ID \"#{arguments}\"")
         return

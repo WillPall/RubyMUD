@@ -14,7 +14,7 @@ admin_user = User.new(
 admin_user.password = 'admin'
 admin_user.save
 
-RoomType.create(
+Rooms::Type.create(
   name: 'Water',
   code_name: 'water',
   default_title: 'Deep Water',
@@ -24,7 +24,7 @@ RoomType.create(
   map_is_bright: false,
   image_color: '#0000ff'
 )
-RoomType.create(
+Rooms::Type.create(
   name: 'Grass',
   code_name: 'grass',
   default_title: 'Grassy Plain',
@@ -34,7 +34,7 @@ RoomType.create(
   map_is_bright: true,
   image_color: '#00ff00'
 )
-RoomType.create(
+Rooms::Type.create(
   name: 'Beach',
   code_name: 'beach',
   default_title: 'Sandy Beach',
@@ -44,7 +44,7 @@ RoomType.create(
   map_is_bright: true,
   image_color: '#ffff00'
 )
-RoomType.create(
+Rooms::Type.create(
   name: 'Forest',
   code_name: 'forest',
   default_title: 'Dense Forest',
@@ -54,7 +54,7 @@ RoomType.create(
   map_is_bright: false,
   image_color: '#329632'
 )
-RoomType.create(
+Rooms::Type.create(
   name: 'Road',
   code_name: 'road',
   default_title: 'Road',
