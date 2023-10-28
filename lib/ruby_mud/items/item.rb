@@ -5,6 +5,5 @@ class Items::Item < ActiveRecord::Base
     Items::ItemInstance.create(
       item: self
     )
-    self.item_instances.reload
   end
 end
